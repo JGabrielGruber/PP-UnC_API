@@ -1,0 +1,10 @@
+hug
+mongoengine
+pillow
+gunicorn
+PyJWT
+rsa
+cryptography
+dnspython
+jsonschema
+numpy
