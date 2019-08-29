@@ -1,5 +1,8 @@
+import	hug
+import	numpy
 from	jsonschema	import validate, exceptions
 from	mongoengine	import *
+from	datetime	import datetime
 
 schema_questao	= {
 	"type":	"object",
@@ -38,6 +41,19 @@ schema_questao	= {
 		"peso"
 	]
 }
+
+class QuestaoType(hug.types.Type):
+	__slots__ = ()
+
+	def __call__(self, value):
+		try:
+			validate(value, schema_questao)
+			return value
+		except exceptions.ValidationError as e:
+			raise ValueError({
+				"invalid":		numpy.array(e.relative_path),
+				"required":		e.validator_value
+			})
 
 class Questao(EmbeddedDocument):
 	descricao		= StringField(required=True)

@@ -1,5 +1,8 @@
+import	hug
+import	numpy
 from	jsonschema	import validate, exceptions
 from	mongoengine	import *
+from	datetime	import datetime
 
 from	.questao	import schema_questao, Questao
 
@@ -12,7 +15,7 @@ schema_prova_base	= {
 		"descricao": {
 			"type": "string"
 		},
-		"questao": {
+		"questoes": {
 			"type": "array",
 			"items": schema_questao
 		}
@@ -22,9 +25,22 @@ schema_prova_base	= {
 	]
 }
 
+class ProvaBaseType(hug.types.Type):
+	__slots__ = ()
+
+	def __call__(self, value):
+		try:
+			validate(value, schema_prova)
+			return value
+		except exceptions.ValidationError as e:
+			raise ValueError({
+				"invalid":		numpy.array(e.relative_path),
+				"required":		e.validator_value
+			})
+
 class ProvaBase(EmbeddedDocument):
 	titulo		= StringField(required=True)
 	descricao	= StringField(required=True)
-	questao		= ListField(EmbeddedDocumentField(Questao))
-	timestamp		= DateTimeField(default=datetime.now())
-	timeupdate		= DateTimeField(default=datetime.now())
+	questoes	= ListField(EmbeddedDocumentField(Questao))
+	timestamp	= DateTimeField(default=datetime.now())
+	timeupdate	= DateTimeField(default=datetime.now())

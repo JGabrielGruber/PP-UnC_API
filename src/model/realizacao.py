@@ -1,7 +1,11 @@
+import	hug
+import	numpy
 from	jsonschema	import validate, exceptions
 from	mongoengine	import *
+from	datetime	import datetime
 
 from	.aluno		import schema_aluno, Aluno
+from	.resposta	import schema_resposta, Resposta
 
 schema_realizacao	= {
 	"type":	"object",
@@ -23,8 +27,21 @@ schema_realizacao	= {
 	]
 }
 
+class RealizacaoType(hug.types.Type):
+	__slots__ = ()
+
+	def __call__(self, value):
+		try:
+			validate(value, schema_realizacao)
+			return value
+		except exceptions.ValidationError as e:
+			raise ValueError({
+				"invalid":		numpy.array(e.relative_path),
+				"required":		e.validator_value
+			})
+
 class Realizacao(EmbeddedDocument):
-	aluno			= EmbeddedDocumentField(Aluno)
+	aluno			= ReferenceField(Aluno, reverse_delete_rule=DENY)
 	resposta		= ListField(EmbeddedDocumentField(Resposta))
 	correta			= BooleanField()
 	meioCorreta		= BooleanField()

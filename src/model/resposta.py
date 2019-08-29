@@ -1,5 +1,8 @@
+import	hug
+import	numpy
 from	jsonschema	import validate, exceptions
 from	mongoengine	import *
+from	datetime	import datetime
 
 schema_resposta	= {
 	"type":	"object",
@@ -21,6 +24,19 @@ schema_resposta	= {
 		}
 	}
 }
+
+class RespostaType(hug.types.Type):
+	__slots__ = ()
+
+	def __call__(self, value):
+		try:
+			validate(value, schema_resposta)
+			return value
+		except exceptions.ValidationError as e:
+			raise ValueError({
+				"invalid":		numpy.array(e.relative_path),
+				"required":		e.validator_value
+			})
 
 class Resposta(EmbeddedDocument):
 	escolhas		= ListField(IntField())
