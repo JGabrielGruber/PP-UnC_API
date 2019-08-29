@@ -13,6 +13,9 @@ schema_login	= {
 		"senha": {
 			"type": "string"
 		},
+		"hash": {
+			"type": "string"
+		},
 		"level": {
 			"type": "string"
 		}
@@ -38,4 +41,6 @@ class LoginType(hug.types.Type):
 			})
 
 class Login(EmbeddedDocument):
-	titulo	= StringField(required=True)
+	email	= EmailField(required=True)
+	hash	= StringField(required=True)
+	level	= StringField(required=True)
