@@ -38,7 +38,7 @@ schema_turma	= {
 	]
 }
 
-class ProvaType(hug.types.Type):
+class TurmaType(hug.types.Type):
 	__slots__ = ()
 
 	def __call__(self, value):
@@ -51,10 +51,10 @@ class ProvaType(hug.types.Type):
 				"required":		e.validator_value
 			})
 
-class Prova(EmbeddedDocument):
+class Turma(EmbeddedDocument):
 	titulo		= StringField(required=True)
 	descricao	= StringField()
-	curso		= ReferenceField(Curso, reverse_delete_rule=DO_NOTHING)
+	curso		= ReferenceField('Curso', reverse_delete_rule=DO_NOTHING)
 	ano			= IntField()
 	semestre	= IntField()
 	alunos		= ListField(EmbeddedDocumentField(Aluno))

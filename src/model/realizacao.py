@@ -41,7 +41,7 @@ class RealizacaoType(hug.types.Type):
 			})
 
 class Realizacao(EmbeddedDocument):
-	aluno			= ReferenceField(Aluno, reverse_delete_rule=DENY)
+	aluno			= ReferenceField('Aluno')
 	resposta		= ListField(EmbeddedDocumentField(Resposta))
 	correta			= BooleanField()
 	meioCorreta		= BooleanField()

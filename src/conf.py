@@ -1,4 +1,6 @@
+import	json
 import	mongoengine
+import	os
 
 def getConf():
 	if not os.path.exists('./.cache'):
@@ -12,7 +14,7 @@ def getConf():
 				"db_auth_host": "",
 				"db_data_host": ""
 			} } ))
-		getSecret()
+			getConf()
 
 db_auth	= mongoengine.connect(host=getConf()['db_auth_host'], alias="auth").PPUnC_Auth
 db_data	= mongoengine.connect(host=getConf()['db_data_host'], alias="default").PPUnC_Data

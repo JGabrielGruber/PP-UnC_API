@@ -13,9 +13,6 @@ schema_login	= {
 		"senha": {
 			"type": "string"
 		},
-		"hash": {
-			"type": "string"
-		},
 		"level": {
 			"type": "string"
 		}
@@ -44,3 +41,5 @@ class Login(EmbeddedDocument):
 	email	= EmailField(required=True)
 	hash	= StringField(required=True)
 	level	= StringField(required=True)
+	
+	meta = { "db_alias": "auth" }
