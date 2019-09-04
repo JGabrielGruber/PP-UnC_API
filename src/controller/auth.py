@@ -14,6 +14,10 @@ from	conf				import	db_auth, db_data
 from	model.usuario		import	Usuario
 from	model.login			import	Login
 
+# TODO: Implementar criação de token para aluno com base na realização que ele irá fazer, e também, com base na data que ele poderá usar este token para acessar esta prova
+#		O id da realização dele e da prova não devem estr presente na URL
+#		Se for o caso, implementar junto no token, então, passar para as funções
+
 def setAuth(response, data, level="basic"):
 	"""Create a new login, with the client_id and the encrypted client_secret"""
 	try:
@@ -25,16 +29,17 @@ def setAuth(response, data, level="basic"):
 		login.save()
 		return senha
 	except Exception as e:
+		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
 def getAuth(response, client_id, client_secret):
 	"""Verify if the login exists"""
 	try:
-		auths	= db_auth.auth.find_one({ "client_id": client_id })
+		auths	= json.loads(Login.objects(email=client_id).to_json())[0]
 		datas	= False
 		level	= auths['level']
-		datas	= db_data.usuario.find_one({ client_id })
+		datas	= json.loads(Usuario.objects.get(email=client_id).to_json())
 		if auths and datas:
 			if client_secret == cryptKey.decryptContent(datas['senha'], auths['hash']):
 				return level

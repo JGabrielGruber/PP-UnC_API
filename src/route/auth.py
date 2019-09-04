@@ -10,7 +10,7 @@ def get_data(response):
 @hug.post('/token', version=1)
 def get_token(
 	grant_type: hug.types.text,
-	client_id: hug.types.number,
+	client_id: hug.types.text,
 	client_secret: hug.types.text,
 	response
 ):

@@ -37,7 +37,7 @@ class LoginType(hug.types.Type):
 				"required":		e.validator_value
 			})
 
-class Login(EmbeddedDocument):
+class Login(DynamicDocument):
 	email	= EmailField(required=True)
 	hash	= StringField(required=True)
 	level	= StringField(required=True)

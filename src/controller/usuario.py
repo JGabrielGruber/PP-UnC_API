@@ -31,7 +31,11 @@ def getUsuarioById(response, id):
 
 def newUsuario(response, data):
 	try:
-		data["senha"]	= auth.setAuth(response, data["email"], data["senha"], "usuario")
+		data["senha"]	= auth.setAuth(
+			response,
+			{ "email": data["email"], "senha": data["senha"], "level": "usuario" },
+			"usuario"
+		)
 		try:
 			if data["senha"]["error"]:
 				return data["senha"]
