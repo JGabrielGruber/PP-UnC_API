@@ -7,43 +7,53 @@ from	route			import aluno, prova
 
 @hug.get('/', requires=auth.basicAccess('usuario'))
 def get_index(
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerTurma.getTurmas(response)
+	return controllerTurma.getTurmas(response, usuario_id, materia_id)
 
-@hug.get('/{id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{turma_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	id: hug.types.number,
+	turma_id: hug.types.number,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerTurma.getTurmaById(response, id)
+	return controllerTurma.getTurmaById(response, usuario_id, materia_id, turma_id)
 
 @hug.post('/', requires=auth.basicAccess('usuario'))
 def post_data(
 	turma: modelTurma.TurmaType(),
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerTurma.newTurma(response, turma)
+	return controllerTurma.newTurma(response, usuario_id, materia_id, turma)
 
-@hug.put('/{id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{turma_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	id: hug.types.number,
+	turma_id: hug.types.number,
+	materia_id,
+	usuario_id,
 	turma: modelTurma.TurmaType(),
 	response
 ):
-	return controllerTurma.updateTurma(response, id, turma)
+	return controllerTurma.updateTurma(response, usuario_id, materia_id, turma_id, turma)
 
-@hug.delete('/{id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{turma_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	id: hug.types.number,
+	turma_id: hug.types.number,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerTurma.deleteTurmaById(response, id)
+	return controllerTurma.deleteTurmaById(response, usuario_id, materia_id, turma_id)
 
-@hug.extend_api('/{id}/provas')
+@hug.extend_api('/{turma_id}/provas')
 def prova_api():
 	return [prova]
 
-@hug.extend_api('/{id}/alunos')
+@hug.extend_api('/{turma_id}/alunos')
 def aluno_api():
 	return [aluno]

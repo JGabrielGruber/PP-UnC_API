@@ -11,12 +11,12 @@ def get_index(
 ):
 	return controllerUsuario.getUsuarios(response)
 
-@hug.get('/{id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{usuario_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	id: hug.types.number,
+	usuario_id: hug.types.number,
 	response
 ):
-	return controllerUsuario.getUsuarioById(response, id)
+	return controllerUsuario.getUsuarioById(response, usuario_id)
 
 @hug.post('/', requires=auth.basicAccess('admin'))
 def post_data(
@@ -25,21 +25,21 @@ def post_data(
 ):
 	return controllerUsuario.newUsuario(response, usuario)
 
-@hug.put('/{id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{usuario_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	id: hug.types.number,
+	usuario_id: hug.types.number,
 	usuario: modelUsuario.UsuarioType(),
 	response
 ):
-	return controllerUsuario.updateUsuario(response, id, usuario)
+	return controllerUsuario.updateUsuario(response, usuario_id, usuario)
 
-@hug.delete('/{id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{usuario_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	id: hug.types.number,
+	usuario_id: hug.types.number,
 	response
 ):
-	return controllerUsuario.deleteUsuarioById(response, id)
+	return controllerUsuario.deleteUsuarioById(response, usuario_id)
 
-@hug.extend_api('/{id}/materias')
+@hug.extend_api('/{usuario_id}/materias')
 def materia_api():
 	return [materia]
