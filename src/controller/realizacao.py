@@ -2,8 +2,8 @@ import	json
 from	falcon		import HTTP_201, HTTP_400, HTTP_403, HTTP_502
 from	datetime	import datetime
 
-from	model.usuario	import Usuario
-from	model.prova		import RealizacaoType, Realizacao
+from	model.usuario		import Usuario
+from	model.realizacao	import RealizacaoType, Realizacao
 
 def getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id):
 	locals	= eval(response.get_header("locals"))
