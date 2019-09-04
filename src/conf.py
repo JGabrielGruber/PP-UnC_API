@@ -16,5 +16,5 @@ def getConf():
 			} } ))
 			getConf()
 
-db_auth	= mongoengine.connect(host=getConf()['db_auth_host'], alias="auth").PPUnC_Auth
-db_data	= mongoengine.connect(host=getConf()['db_data_host'], alias="default").PPUnC_Data
+db_auth	= mongoengine.connect('PPUnCAuth', host=getConf()['db_auth_host'], alias="auth")
+db_data	= mongoengine.connect('PPUnC', host=getConf()['db_data_host'], alias="default")
