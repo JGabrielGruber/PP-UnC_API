@@ -28,8 +28,8 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
 		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data		= []
-		if materia:
-			data	= json.loads(materia.to_json())
+		if turma:
+			data	= json.loads(turma.to_json())
 		return data
 	except Exception as e:
 		response.status = HTTP_502

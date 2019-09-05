@@ -6,35 +6,50 @@ from	model			import aluno as modelAluno
 
 @hug.get('/', requires=auth.basicAccess('usuario'))
 def get_index(
+	turma_id,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerAluno.getAlunos(response)
+	return controllerAluno.getAlunos(response, usuario_id, materia_id, turma_id)
 
 @hug.get('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
 	aluno_id: hug.types.text,
+	turma_id,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerAluno.getAlunoById(response, aluno_id)
+	return controllerAluno.getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id)
 
 @hug.post('/', requires=auth.basicAccess('usuario'))
 def post_data(
 	aluno: modelAluno.AlunoType(),
+	turma_id,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerAluno.newAluno(response, aluno)
+	return controllerAluno.newAluno(response, usuario_id, materia_id, turma_id, aluno)
 
 @hug.put('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def put_data(
 	aluno_id: hug.types.text,
+	turma_id,
+	materia_id,
+	usuario_id,
 	aluno: modelAluno.AlunoType(),
 	response
 ):
-	return controllerAluno.updateAluno(response, aluno_id, aluno)
+	return controllerAluno.updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, aluno)
 
 @hug.delete('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
 	aluno_id: hug.types.text,
+	turma_id,
+	materia_id,
+	usuario_id,
 	response
 ):
-	return controllerAluno.deleteAlunoById(response, aluno_id)
+	return controllerAluno.deleteAlunoById(response, usuario_id, materia_id, turma_id, aluno_id)
