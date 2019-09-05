@@ -1,8 +1,9 @@
 import	hug
 import	numpy
-from	jsonschema	import validate, exceptions
-from	mongoengine	import *
-from	datetime	import datetime
+from	jsonschema		import validate, exceptions
+from	mongoengine		import *
+from	datetime		import datetime
+from	bson.objectid	import ObjectId
 
 from	.aluno		import schema_aluno, Aluno
 from	.resposta	import schema_resposta, Resposta

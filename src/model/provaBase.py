@@ -1,8 +1,9 @@
 import	hug
 import	numpy
-from	jsonschema	import validate, exceptions
-from	mongoengine	import *
-from	datetime	import datetime
+from	jsonschema		import validate, exceptions
+from	mongoengine		import *
+from	datetime		import datetime
+from	bson.objectid	import ObjectId
 
 from	.questao	import schema_questao, Questao
 
