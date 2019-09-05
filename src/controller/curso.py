@@ -8,9 +8,6 @@ from	controller		import auth
 def getCursos(response):
 	try:
 		data	= json.loads(Curso.objects.to_json())
-		for item in data:
-			item.pop('senha')
-			data.pop('materias', None)
 		return data
 
 	except Exception as e:

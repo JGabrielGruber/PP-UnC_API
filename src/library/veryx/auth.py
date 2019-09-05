@@ -21,7 +21,7 @@ def basicAccess(request, response, level="basic", context=None, **kwargs):
 			secret_key	= getSecret()
 			try:
 				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
-				if content["level"] == level or level == "basic":
+				if content["level"] == level or level == "basic" or content["level"] == "admin":
 					response.append_header('locals', content)
 					return True
 				raise jwt.DecodeError()
@@ -46,7 +46,7 @@ def advancedAccess(request, response, level="empresa", context=None, **kwargs):
 			try:
 				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
 				id		= request.relative_uri.split('/')[-2]
-				if str(content["client_id"]) == str(id) or content["level"] == level:
+				if str(content["client_id"]) == str(id) or content["level"] == level or content["level"] == "admin":
 					content["id"]	= id
 					response.append_header('locals', content)
 					return True
@@ -71,7 +71,7 @@ def ownerAccess(request, response, level="basic", context=None, **kwargs):
 			try:
 				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
 				id		= request.relative_uri.split('/')[-2]
-				if str(content['client_id']) == str(id):
+				if str(content['client_id']) == str(id) or content["level"] == "admin":
 					response.append_header('locals', content)
 					return True
 			except jwt.DecodeError:

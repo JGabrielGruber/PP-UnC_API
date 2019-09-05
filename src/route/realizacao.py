@@ -16,7 +16,7 @@ def get_index(
 
 @hug.get('/{realizacao_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	realizacao_id: hug.types.number,
+	realizacao_id: hug.types.text,
 	prova_id,
 	turma_id,
 	materia_id,
@@ -38,7 +38,7 @@ def post_data(
 
 @hug.put('/{realizacao_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	realizacao_id: hug.types.number,
+	realizacao_id: hug.types.text,
 	prova_id,
 	turma_id,
 	materia_id,
@@ -50,7 +50,7 @@ def put_data(
 
 @hug.delete('/{realizacao_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	realizacao_id: hug.types.number,
+	realizacao_id: hug.types.text,
 	prova_id,
 	turma_id,
 	materia_id,

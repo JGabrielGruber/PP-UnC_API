@@ -12,7 +12,7 @@ def get_index(
 
 @hug.get('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	aluno_id: hug.types.number,
+	aluno_id: hug.types.text,
 	response
 ):
 	return controllerAluno.getAlunoById(response, aluno_id)
@@ -26,7 +26,7 @@ def post_data(
 
 @hug.put('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	aluno_id: hug.types.number,
+	aluno_id: hug.types.text,
 	aluno: modelAluno.AlunoType(),
 	response
 ):
@@ -34,7 +34,7 @@ def put_data(
 
 @hug.delete('/{aluno_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	aluno_id: hug.types.number,
+	aluno_id: hug.types.text,
 	response
 ):
 	return controllerAluno.deleteAlunoById(response, aluno_id)

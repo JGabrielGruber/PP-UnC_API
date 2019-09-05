@@ -8,7 +8,7 @@ from	model.prova		import ProvaType, Prova
 def getProvas(response, usuario_id, materia_id, turma_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		provas	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).provas
+		provas	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas
 		data	= []
 		if provas:
 			data	= json.loads(provas.to_json())
@@ -23,7 +23,7 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		prova	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).provas.get(id=prova_id)
+		prova	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data	= []
 		if prova:
 			data	= json.loads(prova.to_json())
@@ -35,7 +35,7 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 def newProva(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id)
+		turma	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data.pop("realizacoes", None)
 		prova	= Prova(**data)
 		turma.provas.append(turma)
@@ -49,7 +49,7 @@ def newProva(response, usuario_id, materia_id, data):
 def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		prova		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).provas.get(id=prova_id)
+		prova		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data.pop("timestamp", None)
 		data.pop("realizacoes", None)
 		data["timeupdate"]	= datetime.now()
@@ -64,7 +64,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 def deleteProva(response, usuario_id, materia_id, turma_id, prova_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		prova		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).provas.get(id=prova_id)
+		prova		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		prova.delete()
 		return {}
 	except Exception as e:

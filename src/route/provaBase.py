@@ -14,7 +14,7 @@ def get_index(
 
 @hug.get('/{provaBase_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	provaBase_id: hug.types.number,
+	provaBase_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	response
@@ -32,7 +32,7 @@ def post_data(
 
 @hug.put('/{provaBase_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	provaBase_id: hug.types.number,
+	provaBase_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	provaBase: modelProvaBase.ProvaBaseType(),
@@ -42,7 +42,7 @@ def put_data(
 
 @hug.delete('/{provaBase_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	provaBase_id: hug.types.number,
+	provaBase_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	response

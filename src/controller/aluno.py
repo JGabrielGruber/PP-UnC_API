@@ -8,7 +8,7 @@ from	model.aluno		import AlunoType, Aluno
 def getAlunos(response, usuario_id, materia_id, turma_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		alunos	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).alunos
+		alunos	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos
 		data	= []
 		if turmas:
 			data	= json.loads(turmas.to_json())
@@ -20,7 +20,7 @@ def getAlunos(response, usuario_id, materia_id, turma_id):
 def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		aluno	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).alunos.get(id=aluno_id)
+		aluno	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		data	= []
 		if aluno:
 			data	= json.loads(aluno.to_json())
@@ -32,7 +32,7 @@ def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 def newAluno(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma	= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id)
+		turma	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		aluno	= Aluno(**data)
 		turma.alunos.append(turma)
 		turma.save()
@@ -45,7 +45,7 @@ def newAluno(response, usuario_id, materia_id, data):
 def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		aluno		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).alunos.get(id=aluno_id)
+		aluno		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
@@ -59,7 +59,7 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 def deleteAluno(response, usuario_id, materia_id, turma_id, aluno_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		aluno		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id).turmas.get(id=turma_id).alunos.get(id=aluno_id)
+		aluno		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		aluno.delete()
 		return {}
 	except Exception as e:

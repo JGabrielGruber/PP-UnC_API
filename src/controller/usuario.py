@@ -9,8 +9,8 @@ def getUsuarios(response):
 	try:
 		data	= json.loads(Usuario.objects.to_json())
 		for item in data:
-			item.pop('senha')
-			data.pop('materias', None)
+			item.pop('senha', None)
+			item.pop('materias', None)
 		return data
 
 	except Exception as e:
@@ -19,7 +19,7 @@ def getUsuarios(response):
 
 def getUsuarioById(response, id):
 	try:
-		data	= json.loads(Usuario.objects.get(id).to_json())
+		data	= json.loads(Usuario.objects.get(id=id).to_json())
 		data.pop('senha')
 		data.pop('materias.turmas', None)
 		data.pop('materias.provasBases', None)

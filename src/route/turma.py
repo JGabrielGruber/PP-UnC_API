@@ -15,7 +15,7 @@ def get_index(
 
 @hug.get('/{turma_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	turma_id: hug.types.number,
+	turma_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	response
@@ -33,7 +33,7 @@ def post_data(
 
 @hug.put('/{turma_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	turma_id: hug.types.number,
+	turma_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	turma: modelTurma.TurmaType(),
@@ -43,7 +43,7 @@ def put_data(
 
 @hug.delete('/{turma_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	turma_id: hug.types.number,
+	turma_id: hug.types.text,
 	materia_id,
 	usuario_id,
 	response

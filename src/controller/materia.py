@@ -12,7 +12,8 @@ def getMaterias(response, usuario_id):
 		materias	= Usuario.objects.get(id=usuario_id).materias
 		data		= []
 		if materias:
-			data	= json.loads(materias.to_json())
+			for materia in materias:
+				data.append(json.loads(materia.to_json()))
 		for item in data:
 			item.pop('turmas', None)
 			item.pop('provasBases', None)
@@ -24,7 +25,7 @@ def getMaterias(response, usuario_id):
 def getMateriaById(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id)
+		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data		= []
 		if materia:
 			data	= json.loads(materia.to_json())
@@ -33,7 +34,7 @@ def getMateriaById(response, usuario_id, materia_id):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def newMateria(response, usuario_id, ata):
+def newMateria(response, usuario_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
@@ -51,7 +52,7 @@ def newMateria(response, usuario_id, ata):
 def updateMateria(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id)
+		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data.pop("timestamp", None)
 		data.pop("turmas", None)
 		data.pop("provasBases", None)
@@ -67,7 +68,7 @@ def updateMateria(response, usuario_id, materia_id, data):
 def deleteMateria(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia		= Usuario.objects.get(id=usuario_id).materias.get(id=materia_id)
+		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		materia.delete()
 		return {}
 	except Exception as e:

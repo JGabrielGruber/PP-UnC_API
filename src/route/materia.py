@@ -14,13 +14,13 @@ def get_index(
 
 @hug.get('/{materia_id}', requires=auth.basicAccess('usuario'))
 def get_byId(
-	materia_id: hug.types.number,
+	materia_id: hug.types.text,
 	usuario_id,
 	response
 ):
 	return controllerMateria.getMateriaById(response, usuario_id, materia_id)
 
-@hug.post('/', requires=auth.basicAccess('admin'))
+@hug.post('/', requires=auth.basicAccess('usuario'))
 def post_data(
 	materia: modelMateria.MateriaType(),
 	usuario_id,
@@ -30,7 +30,7 @@ def post_data(
 
 @hug.put('/{materia_id}', requires=auth.basicAccess('usuario'))
 def put_data(
-	materia_id: hug.types.number,
+	materia_id: hug.types.text,
 	usuario_id,
 	materia: modelMateria.MateriaType(),
 	response
@@ -39,7 +39,7 @@ def put_data(
 
 @hug.delete('/{materia_id}', requires=auth.basicAccess('usuario'))
 def delete_data(
-	materia_id: hug.types.number,
+	materia_id: hug.types.text,
 	usuario_id,
 	response
 ):
