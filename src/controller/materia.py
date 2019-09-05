@@ -53,14 +53,15 @@ def newMateria(response, usuario_id, data):
 def updateMateria(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
+		usuario	= Usuario.objects.get(id=usuario_id)
+		materia	= usuario.materias.get(_id=materia_id)
 		data.pop("timestamp", None)
 		data.pop("turmas", None)
 		data.pop("provasBases", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			materia[key]	= value
-		materia.save()
+		usuario.save()
 		return json.loads(materia.to_json())
 	except Exception as e:
 		response.status = HTTP_502
@@ -69,7 +70,7 @@ def updateMateria(response, usuario_id, materia_id, data):
 def deleteMateria(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
+		materia	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		materia.delete()
 		return {}
 	except Exception as e:

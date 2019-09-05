@@ -13,7 +13,8 @@ def getTurmas(response, usuario_id, materia_id):
 		turmas	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas
 		data		= []
 		if turmas:
-			data	= json.loads(turmas.to_json())
+			for turma in turmas:
+				data.append(json.loads(turma.to_json()))
 		for item in data:
 			item.pop('alunos', None)
 			item.pop('provas', None)
@@ -37,12 +38,12 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 def newTurma(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data.pop("alunos", None)
 		data.pop("provas", None)
+		usuario	= Usuario.objects.get(id=usuario_id)
 		turma	= Turma(**data)
-		materia.turmas.append(turma)
-		materia.save()
+		usuario.materias.get(_id=materia_id).turmas.append(turma)
+		usuario.save()
 		response.status = HTTP_201
 		return json.loads(turma.to_json())
 	except Exception as e:
@@ -52,14 +53,15 @@ def newTurma(response, usuario_id, materia_id, data):
 def updateTurma(response, usuario_id, materia_id, turma_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		usuario	= Usuario.objects.get(id=usuario_id)
+		turma	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data.pop("timestamp", None)
 		data.pop("alunos", None)
 		data.pop("provas", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			turma[key]	= value
-		turma.save()
+		usuario.save()
 		return json.loads(turma.to_json())
 	except Exception as e:
 		response.status = HTTP_502
@@ -68,7 +70,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 def deleteTurma(response, usuario_id, materia_id, turma_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		turma	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		turma.delete()
 		return {}
 	except Exception as e:

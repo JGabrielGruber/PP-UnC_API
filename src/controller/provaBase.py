@@ -10,10 +10,11 @@ from	controller		import auth
 def getProvaBases(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materias	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases
+		provasBases	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases
 		data		= []
-		if materias:
-			data	= json.loads(materias.to_json())
+		if provasBases:
+			for provaBase in provasBases:
+				data.append(json.loads(provaBase.to_json()))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -34,12 +35,10 @@ def getProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 def newProvaBase(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
-		data.pop("alunos", None)
-		data.pop("provas", None)
+		usuario		= Usuario.objects.get(id=usuario_id)
 		provaBase	= ProvaBase(**data)
-		materia.provas_bases.append(provaBase)
-		materia.save()
+		usuario.materias.get(_id=materia_id).provas_bases.append(provaBase)
+		usuario.save()
 		response.status = HTTP_201
 		return json.loads(provaBase.to_json())
 	except Exception as e:
@@ -50,12 +49,13 @@ def newProvaBase(response, usuario_id, materia_id, data):
 def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		provaBase	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+		usuario		= Usuario.objects.get(id=usuario_id)
+		provaBase	= usuario.materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			provaBase[key]	= value
-		provaBase.save()
+		usuario.save()
 		return json.loads(provaBase.to_json())
 	except Exception as e:
 		response.status = HTTP_502

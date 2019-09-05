@@ -11,7 +11,8 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 		provas	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas
 		data	= []
 		if provas:
-			data	= json.loads(provas.to_json())
+			for prova in provas:
+				data.append(json.loads(prova.to_json()))
 		for item in data:
 			item.pop('realizacoes', None)
 			item.pop('questoes', None)
@@ -32,14 +33,14 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def newProva(response, usuario_id, materia_id, data):
+def newProva(response, usuario_id, materia_id, turma_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data.pop("realizacoes", None)
+		usuario	= Usuario.objects.get(id=usuario_id)
 		prova	= Prova(**data)
-		turma.provas.append(turma)
-		turma.save()
+		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.append(prova)
+		usuario.save()
 		response.status = HTTP_201
 		return json.loads(prova.to_json())
 	except Exception as e:
@@ -49,13 +50,14 @@ def newProva(response, usuario_id, materia_id, data):
 def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		prova		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
+		usuario	= Usuario.objects.get(id=usuario_id)
+		prova	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data.pop("timestamp", None)
 		data.pop("realizacoes", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			prova[key]	= value
-		prova.save()
+		usuario.save()
 		return json.loads(prova.to_json())
 	except Exception as e:
 		response.status = HTTP_502
@@ -64,7 +66,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 def deleteProva(response, usuario_id, materia_id, turma_id, prova_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		prova		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
+		prova	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		prova.delete()
 		return {}
 	except Exception as e:

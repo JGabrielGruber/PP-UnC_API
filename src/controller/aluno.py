@@ -10,8 +10,9 @@ def getAlunos(response, usuario_id, materia_id, turma_id):
 	try:
 		alunos	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos
 		data	= []
-		if turmas:
-			data	= json.loads(turmas.to_json())
+		if alunos:
+			for aluno in alunos:
+				data.append(json.loads(aluno.to_json()))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -29,13 +30,13 @@ def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def newAluno(response, usuario_id, materia_id, data):
+def newAluno(response, usuario_id, materia_id, turma_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		usuario	= Usuario.objects.get(id=usuario_id)
 		aluno	= Aluno(**data)
-		turma.alunos.append(turma)
-		turma.save()
+		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.append(aluno)
+		usuario.save()
 		response.status = HTTP_201
 		return json.loads(aluno.to_json())
 	except Exception as e:
@@ -45,12 +46,13 @@ def newAluno(response, usuario_id, materia_id, data):
 def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		aluno		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
+		usuario	= Usuario.objects.get(id=usuario_id)
+		aluno	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			aluno[key]	= value
-		aluno.save()
+		usuario.save()
 		return json.loads(aluno.to_json())
 	except Exception as e:
 		response.status = HTTP_502
@@ -59,7 +61,7 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 def deleteAluno(response, usuario_id, materia_id, turma_id, aluno_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		aluno		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
+		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		aluno.delete()
 		return {}
 	except Exception as e:
