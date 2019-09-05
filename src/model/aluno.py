@@ -34,6 +34,7 @@ class AlunoType(hug.types.Type):
 			})
 
 class Aluno(EmbeddedDocument):
+	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	nome		= StringField(required=True)
 	email		= EmailField(required=True)
 	timestamp	= DateTimeField(default=datetime.now())

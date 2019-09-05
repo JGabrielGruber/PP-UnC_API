@@ -44,6 +44,7 @@ class MateriaType(hug.types.Type):
 			})
 
 class Materia(EmbeddedDocument):
+	_id				= ObjectIdField(required=True, default=lambda: ObjectId())
 	titulo			= StringField(required=True)
 	descricao		= StringField()
 	turmas			= ListField(EmbeddedDocumentField(Turma))

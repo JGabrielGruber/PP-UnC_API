@@ -41,6 +41,7 @@ class RealizacaoType(hug.types.Type):
 			})
 
 class Realizacao(EmbeddedDocument):
+	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	aluno			= ReferenceField('Aluno')
 	resposta		= ListField(EmbeddedDocumentField(Resposta))
 	correta			= BooleanField()

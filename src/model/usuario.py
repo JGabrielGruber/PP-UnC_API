@@ -44,6 +44,6 @@ class Usuario(DynamicDocument):
 	nome			= StringField(max_length=254, required=True)
 	senha			= StringField(required=True)
 	email			= StringField(max_length=254, required=True)
-	materias		= EmbeddedDocumentField(Materia)
+	materias		= EmbeddedDocumentListField(Materia)
 	timestamp		= DateTimeField(default=datetime.now())
 	timeupdate		= DateTimeField(default=datetime.now())

@@ -47,6 +47,7 @@ class ProvaType(hug.types.Type):
 			})
 
 class Prova(EmbeddedDocument):
+	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	titulo		= StringField(required=True)
 	descricao	= StringField()
 	duracao		= IntField()

@@ -39,6 +39,7 @@ class ProvaBaseType(hug.types.Type):
 			})
 
 class ProvaBase(EmbeddedDocument):
+	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	titulo		= StringField(required=True)
 	descricao	= StringField(required=True)
 	questoes	= ListField(EmbeddedDocumentField(Questao))

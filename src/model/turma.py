@@ -52,6 +52,7 @@ class TurmaType(hug.types.Type):
 			})
 
 class Turma(EmbeddedDocument):
+	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	titulo		= StringField(required=True)
 	descricao	= StringField()
 	curso		= ReferenceField('Curso', reverse_delete_rule=DO_NOTHING)
