@@ -31,7 +31,7 @@ class ProvaBaseType(hug.types.Type):
 
 	def __call__(self, value):
 		try:
-			validate(value, schema_prova)
+			validate(value, schema_prova_base)
 			return value
 		except exceptions.ValidationError as e:
 			raise ValueError({
@@ -43,6 +43,6 @@ class ProvaBase(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	titulo		= StringField(required=True)
 	descricao	= StringField(required=True)
-	questoes	= ListField(EmbeddedDocumentField(Questao))
+	questoes	= EmbeddedDocumentListField(Questao)
 	timestamp	= DateTimeField(default=datetime.now())
 	timeupdate	= DateTimeField(default=datetime.now())

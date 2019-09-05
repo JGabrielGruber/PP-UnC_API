@@ -19,6 +19,7 @@ def getMaterias(response, usuario_id):
 			item.pop('provasBases', None)
 		return data
 	except Exception as e:
+		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 

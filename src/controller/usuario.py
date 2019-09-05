@@ -14,6 +14,7 @@ def getUsuarios(response):
 		return data
 
 	except Exception as e:
+		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
@@ -26,6 +27,7 @@ def getUsuarioById(response, id):
 		return data
 
 	except Exception as e:
+		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 

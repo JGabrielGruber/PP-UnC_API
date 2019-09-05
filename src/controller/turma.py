@@ -10,7 +10,7 @@ from	controller		import auth
 def getTurmas(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turmas	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas
+		turmas	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas
 		data		= []
 		if turmas:
 			data	= json.loads(turmas.to_json())
@@ -25,7 +25,7 @@ def getTurmas(response, usuario_id, materia_id):
 def getTurmaById(response, usuario_id, materia_id, turma_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data		= []
 		if materia:
 			data	= json.loads(materia.to_json())
@@ -37,7 +37,7 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 def newTurma(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id)
+		materia	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data.pop("alunos", None)
 		data.pop("provas", None)
 		turma	= Turma(**data)
@@ -52,7 +52,7 @@ def newTurma(response, usuario_id, materia_id, data):
 def updateTurma(response, usuario_id, materia_id, turma_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data.pop("timestamp", None)
 		data.pop("alunos", None)
 		data.pop("provas", None)
@@ -68,7 +68,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 def deleteTurma(response, usuario_id, materia_id, turma_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		turma		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
+		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		turma.delete()
 		return {}
 	except Exception as e:

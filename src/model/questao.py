@@ -57,7 +57,7 @@ class QuestaoType(hug.types.Type):
 			})
 
 class Questao(EmbeddedDocument):
-	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
+	_id				= ObjectIdField(required=True, default=lambda: ObjectId())
 	descricao		= StringField(required=True)
 	isAlternativa	= BooleanField(required=True)
 	alternativas	= ListField(StringField())

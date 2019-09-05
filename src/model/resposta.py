@@ -41,9 +41,9 @@ class RespostaType(hug.types.Type):
 
 class Resposta(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
-	escolhas		= ListField(IntField())
-	resposta		= StringField()
-	correta			= BooleanField()
-	meioCorreta		= BooleanField()
-	timestamp		= DateTimeField(default=datetime.now())
-	timeupdate		= DateTimeField(default=datetime.now())
+	escolhas	= ListField(IntField())
+	resposta	= StringField()
+	correta		= BooleanField()
+	meioCorreta	= BooleanField()
+	timestamp	= DateTimeField(default=datetime.now())
+	timeupdate	= DateTimeField(default=datetime.now())

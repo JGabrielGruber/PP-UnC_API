@@ -4,13 +4,13 @@ from	datetime	import datetime
 
 from	model.usuario	import Usuario
 from	model.materia	import Materia
-from	model.provaBase		import ProvaBaseType, ProvaBase
+from	model.provaBase	import ProvaBaseType, ProvaBase
 from	controller		import auth
 
 def getProvaBases(response, usuario_id, materia_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materias	= Usuario.objects.get(_id=usuario_id).materias
+		materias	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases
 		data		= []
 		if materias:
 			data	= json.loads(materias.to_json())
@@ -22,7 +22,7 @@ def getProvaBases(response, usuario_id, materia_id):
 def getProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		provaBase		= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+		provaBase	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		data		= []
 		if provaBase:
 			data	= json.loads(provaBase.to_json())
@@ -34,7 +34,7 @@ def getProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 def newProvaBase(response, usuario_id, materia_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		materia	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id)
+		materia	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data.pop("alunos", None)
 		data.pop("provas", None)
 		provaBase	= ProvaBase(**data)
@@ -43,13 +43,14 @@ def newProvaBase(response, usuario_id, materia_id, data):
 		response.status = HTTP_201
 		return json.loads(provaBase.to_json())
 	except Exception as e:
+		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
 def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		provaBase	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+		provaBase	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
@@ -63,7 +64,7 @@ def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 def deleteProvaBase(response, usuario_id, materia_id, provaBase_id):
 	locals	= eval(response.get_header("locals"))
 	try:
-		provaBase	= Usuario.objects.get(_id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+		provaBase	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		provaBase.delete()
 		return {}
 	except Exception as e:
