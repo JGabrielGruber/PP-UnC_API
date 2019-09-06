@@ -5,14 +5,14 @@ from	controller		import materia as controllerMateria
 from	model			import materia as modelMateria
 from	route			import turma, provaBase
 
-@hug.get('/', requires=auth.basicAccess('usuario'))
+@hug.get('/', requires=auth.ownerAccess())
 def get_index(
 	usuario_id,
 	response
 ):
 	return controllerMateria.getMaterias(response, usuario_id)
 
-@hug.get('/{materia_id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{materia_id}', requires=auth.ownerAccess())
 def get_byId(
 	materia_id: hug.types.text,
 	usuario_id,
@@ -20,7 +20,7 @@ def get_byId(
 ):
 	return controllerMateria.getMateriaById(response, usuario_id, materia_id)
 
-@hug.post('/', requires=auth.basicAccess('usuario'))
+@hug.post('/', requires=auth.ownerAccess())
 def post_data(
 	materia: modelMateria.MateriaType(),
 	usuario_id,
@@ -28,7 +28,7 @@ def post_data(
 ):
 	return controllerMateria.newMateria(response, usuario_id, materia)
 
-@hug.put('/{materia_id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{materia_id}', requires=auth.ownerAccess())
 def put_data(
 	materia_id: hug.types.text,
 	usuario_id,
@@ -37,7 +37,7 @@ def put_data(
 ):
 	return controllerMateria.updateMateria(response, usuario_id, materia_id, materia)
 
-@hug.delete('/{materia_id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{materia_id}', requires=auth.ownerAccess())
 def delete_data(
 	materia_id: hug.types.text,
 	usuario_id,

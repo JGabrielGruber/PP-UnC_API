@@ -1,7 +1,8 @@
 import	json
 import	jwt
 import	os
-from	falcon					import HTTP_403
+from	falcon			import HTTP_403
+from	model.usuario	import Usuario
 
 def authenticator(function):
 	def wrapper(level="basic"):
@@ -70,7 +71,7 @@ def ownerAccess(request, response, level="basic", context=None, **kwargs):
 
 			try:
 				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
-				id		= request.relative_uri.split('/')[-2]
+				id		= Usuario.objects.get(id=request.relative_uri.split('/')[2]).email
 				if str(content['client_id']) == str(id) or content["level"] == "admin":
 					response.append_header('locals', content)
 					return True

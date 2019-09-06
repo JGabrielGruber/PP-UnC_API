@@ -4,7 +4,7 @@ from	library.veryx	import auth
 from	controller		import realizacao as controllerRealizacao
 from	model			import realizacao as modelRealizacao
 
-@hug.get('/', requires=auth.basicAccess('usuario'))
+@hug.get('/', requires=auth.ownerAccess())
 def get_index(
 	prova_id,
 	turma_id,
@@ -14,7 +14,7 @@ def get_index(
 ):
 	return controllerRealizacao.getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id)
 
-@hug.get('/{realizacao_id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{realizacao_id}', requires=auth.ownerAccess())
 def get_byId(
 	realizacao_id: hug.types.text,
 	prova_id,
@@ -25,7 +25,7 @@ def get_byId(
 ):
 	return controllerRealizacao.getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id)
 
-@hug.post('/', requires=auth.basicAccess('usuario'))
+@hug.post('/', requires=auth.ownerAccess())
 def post_data(
 	realizacao: modelRealizacao.RealizacaoType(),
 	prova_id,
@@ -36,7 +36,7 @@ def post_data(
 ):
 	return controllerRealizacao.newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao)
 
-@hug.put('/{realizacao_id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{realizacao_id}', requires=auth.ownerAccess())
 def put_data(
 	realizacao_id: hug.types.text,
 	prova_id,
@@ -48,7 +48,7 @@ def put_data(
 ):
 	return controllerRealizacao.updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id, realizacao)
 
-@hug.delete('/{realizacao_id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{realizacao_id}', requires=auth.ownerAccess())
 def delete_data(
 	realizacao_id: hug.types.text,
 	prova_id,

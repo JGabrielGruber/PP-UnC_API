@@ -27,7 +27,6 @@ def getUsuarioById(response, id):
 		return data
 
 	except Exception as e:
-		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
@@ -55,36 +54,28 @@ def newUsuario(response, data):
 
 def updateUsuario(response, id, data):
 	locals	= eval(response.get_header("locals"))
-	if locals["client_id"] == id:
-		try:
-			item.pop('senha')
-			data.pop('materias', None)
-			usuario					= Usuario.objects.get(id)
-			usuario["timeupdate"]	= datetime.now()
-			for key, value in data.items():
-				usuario[key]	= value
-			usuario.save()
-			return json.loads(usuario.to_json())
-		except Exception as e:
-			response.status = HTTP_502
-			return { "error": "bad_gateway" }
-	else:
-		response.status = HTTP_403
-		return { "error" : "access_denied" }
+	try:
+		item.pop('senha')
+		data.pop('materias', None)
+		usuario					= Usuario.objects.get(id)
+		usuario["timeupdate"]	= datetime.now()
+		for key, value in data.items():
+			usuario[key]	= value
+		usuario.save()
+		return json.loads(usuario.to_json())
+	except Exception as e:
+		response.status = HTTP_502
+		return { "error": "bad_gateway" }
 
 def deleteUsuarioById(response, id):
 	locals	= eval(response.get_header("locals"))
-	if locals["client_id"] == id:
-		try:
-			delete	= auth.removeAuth(response, id)
-			if not delete:
-				return Usuario.objects.get(id=id).delete()
-			else:
-				return delete
+	try:
+		delete	= auth.removeAuth(response, id)
+		if not delete:
+			return Usuario.objects.get(id=id).delete()
+		else:
+			return delete
 
-		except Exception as e:
-			response.status = HTTP_502
-			return { "error": "bad_gateway" }
-	else:
-		response.status = HTTP_403
-		return { "error" : "access_denied" }
+	except Exception as e:
+		response.status = HTTP_502
+		return { "error": "bad_gateway" }

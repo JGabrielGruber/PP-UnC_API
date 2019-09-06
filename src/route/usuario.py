@@ -11,7 +11,7 @@ def get_index(
 ):
 	return controllerUsuario.getUsuarios(response)
 
-@hug.get('/{usuario_id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{usuario_id}', requires=auth.ownerAccess())
 def get_byId(
 	usuario_id: hug.types.text,
 	response
@@ -25,7 +25,7 @@ def post_data(
 ):
 	return controllerUsuario.newUsuario(response, usuario)
 
-@hug.put('/{usuario_id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{usuario_id}', requires=auth.ownerAccess())
 def put_data(
 	usuario_id: hug.types.text,
 	usuario: modelUsuario.UsuarioType(),
@@ -33,7 +33,7 @@ def put_data(
 ):
 	return controllerUsuario.updateUsuario(response, usuario_id, usuario)
 
-@hug.delete('/{usuario_id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{usuario_id}', requires=auth.ownerAccess())
 def delete_data(
 	usuario_id: hug.types.text,
 	response

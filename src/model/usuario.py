@@ -43,7 +43,7 @@ class UsuarioType(hug.types.Type):
 class Usuario(DynamicDocument):
 	nome			= StringField(max_length=254, required=True)
 	senha			= StringField(required=True)
-	email			= StringField(max_length=254, required=True)
+	email			= StringField(max_length=254, required=True, unique=True)
 	materias		= EmbeddedDocumentListField(Materia)
 	timestamp		= DateTimeField(default=datetime.now())
 	timeupdate		= DateTimeField(default=datetime.now())

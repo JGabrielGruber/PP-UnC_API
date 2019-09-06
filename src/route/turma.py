@@ -5,7 +5,7 @@ from	controller		import turma as controllerTurma
 from	model			import turma as modelTurma
 from	route			import aluno, prova
 
-@hug.get('/', requires=auth.basicAccess('usuario'))
+@hug.get('/', requires=auth.ownerAccess())
 def get_index(
 	materia_id,
 	usuario_id,
@@ -13,7 +13,7 @@ def get_index(
 ):
 	return controllerTurma.getTurmas(response, usuario_id, materia_id)
 
-@hug.get('/{turma_id}', requires=auth.basicAccess('usuario'))
+@hug.get('/{turma_id}', requires=auth.ownerAccess())
 def get_byId(
 	turma_id: hug.types.text,
 	materia_id,
@@ -22,7 +22,7 @@ def get_byId(
 ):
 	return controllerTurma.getTurmaById(response, usuario_id, materia_id, turma_id)
 
-@hug.post('/', requires=auth.basicAccess('usuario'))
+@hug.post('/', requires=auth.ownerAccess())
 def post_data(
 	turma: modelTurma.TurmaType(),
 	materia_id,
@@ -31,7 +31,7 @@ def post_data(
 ):
 	return controllerTurma.newTurma(response, usuario_id, materia_id, turma)
 
-@hug.put('/{turma_id}', requires=auth.basicAccess('usuario'))
+@hug.put('/{turma_id}', requires=auth.ownerAccess())
 def put_data(
 	turma_id: hug.types.text,
 	materia_id,
@@ -41,7 +41,7 @@ def put_data(
 ):
 	return controllerTurma.updateTurma(response, usuario_id, materia_id, turma_id, turma)
 
-@hug.delete('/{turma_id}', requires=auth.basicAccess('usuario'))
+@hug.delete('/{turma_id}', requires=auth.ownerAccess())
 def delete_data(
 	turma_id: hug.types.text,
 	materia_id,
