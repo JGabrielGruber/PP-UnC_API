@@ -4,6 +4,7 @@ from	datetime	import datetime
 
 from	model.usuario	import Usuario
 from	model.provaBase	import ProvaBaseType, ProvaBase
+from	model.questao	import Questao
 from	controller		import auth
 
 def getProvaBases(response, usuario_id, materia_id):
@@ -49,6 +50,14 @@ def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 		provaBase	= usuario.materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
+		if data["questoes"]:
+			for key, value in enumerate(data["questoes"]):
+				if not hasattr(value, "_id"):
+					questao					= Questao(**value)
+					provaBase.questoes.append(questao)
+					data["questoes"][key]	= json.loads(questao.to_json())
+			usuario.save()
+			usuario.reload()
 		for key, value in data.items():
 			provaBase[key]	= value
 		usuario.save()
