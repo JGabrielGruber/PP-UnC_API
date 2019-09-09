@@ -6,7 +6,6 @@ from	model.usuario	import Usuario
 from	model.aluno		import AlunoType, Aluno
 
 def getAlunos(response, usuario_id, materia_id, turma_id):
-	locals	= eval(response.get_header("locals"))
 	try:
 		alunos	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos
 		data	= []
@@ -19,7 +18,6 @@ def getAlunos(response, usuario_id, materia_id, turma_id):
 		return { "error": "bad_gateway" }
 
 def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
-	locals	= eval(response.get_header("locals"))
 	try:
 		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		data	= []
@@ -31,7 +29,6 @@ def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 		return { "error": "bad_gateway" }
 
 def newAluno(response, usuario_id, materia_id, turma_id, data):
-	locals	= eval(response.get_header("locals"))
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		aluno	= Aluno(**data)
@@ -44,10 +41,10 @@ def newAluno(response, usuario_id, materia_id, turma_id, data):
 		return { "error": "bad_gateway" }
 
 def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
-	locals	= eval(response.get_header("locals"))
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		aluno	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
+		data.pop("_id", None)
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		for key, value in data.items():
@@ -59,11 +56,11 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 		return { "error": "bad_gateway" }
 
 def deleteAluno(response, usuario_id, materia_id, turma_id, aluno_id):
-	locals	= eval(response.get_header("locals"))
 	try:
-		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
-		aluno.delete()
-		return {}
+		usuario	= Usuario.objects.get(id=usuario_id)
+		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.filter(_id=aluno_id).delete()
+		usuario.save()
+		return
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
