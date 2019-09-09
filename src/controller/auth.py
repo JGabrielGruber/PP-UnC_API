@@ -36,7 +36,7 @@ def setAuth(response, data, level="basic"):
 def getAuth(response, client_id, client_secret):
 	"""Verify if the login exists"""
 	try:
-		auths	= json.loads(Login.objects(email=client_id).to_json())[0]
+		auths	= json.loads(Login.objects.get(email=client_id).to_json())
 		datas	= False
 		level	= auths['level']
 		datas	= json.loads(Usuario.objects.get(email=client_id).to_json())
@@ -83,7 +83,7 @@ def removeAuth(response, client_id):
 	level		= locals['level']
 	client_id	= locals['client_id']
 	try:
-			db_data.auth.delete_one({ "client_id": client_id })
+			Login.objects.get(email=client_id).delete()
 			return
 	except Exception as e:
 		response.status = HTTP_502

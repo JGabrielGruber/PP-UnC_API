@@ -14,17 +14,13 @@ def getUsuarios(response):
 		return data
 
 	except Exception as e:
-		print(e)
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
 def getUsuarioById(response, id):
 	try:
 		data	= json.loads(Usuario.objects.get(id=id).to_json())
-		data.pop('senha')
-		data.pop('materias.turmas', None)
-		data.pop('materias.provasBases', None)
-		return data
+		return dataUsuario(data)
 
 	except Exception as e:
 		response.status = HTTP_502
@@ -47,7 +43,7 @@ def newUsuario(response, data):
 		usuario["timeupdate"]	= datetime.now()
 		usuario.save()
 		response.status = HTTP_201
-		return json.loads(usuario.to_json())
+		return dataUsuario(json.loads(usuario.to_json()))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -55,14 +51,17 @@ def newUsuario(response, data):
 def updateUsuario(response, id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
-		item.pop('senha')
 		data.pop('materias', None)
-		usuario					= Usuario.objects.get(id)
+		data.pop('timestamp', None)
+		data.pop('timeupdate', None)
+		data.pop('senha', None)
+		data.pop('email', None)
+		usuario					= Usuario.objects.get(id=id)
 		usuario["timeupdate"]	= datetime.now()
 		for key, value in data.items():
 			usuario[key]	= value
 		usuario.save()
-		return json.loads(usuario.to_json())
+		return dataUsuario(json.loads(usuario.to_json()))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -79,3 +78,10 @@ def deleteUsuarioById(response, id):
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
+
+def dataUsuario(data):
+	data.pop('senha')
+	for item in data["materias"]:
+		item.pop('turmas', None)
+		item.pop('provas_bases', None)
+	return data
