@@ -65,5 +65,3 @@ class Questao(EmbeddedDocument):
 	corretas		= ListField(IntField())
 	esperado		= StringField()
 	peso			= FloatField(max_length=2, required=True)
-	timestamp		= DateTimeField(default=datetime.now())
-	timeupdate		= DateTimeField(default=datetime.now())
