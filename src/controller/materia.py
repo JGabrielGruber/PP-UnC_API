@@ -33,7 +33,6 @@ def getMateriaById(response, usuario_id, materia_id):
 		return { "error": "bad_gateway" }
 
 def newMateria(response, usuario_id, data):
-	locals	= eval(response.get_header("locals"))
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		data.pop("turmas", None)
@@ -48,7 +47,6 @@ def newMateria(response, usuario_id, data):
 		return { "error": "bad_gateway" }
 
 def updateMateria(response, usuario_id, materia_id, data):
-	locals	= eval(response.get_header("locals"))
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		materia	= usuario.materias.get(_id=materia_id)
@@ -65,7 +63,6 @@ def updateMateria(response, usuario_id, materia_id, data):
 		return { "error": "bad_gateway" }
 
 def deleteMateriaById(response, usuario_id, materia_id):
-	locals	= eval(response.get_header("locals"))
 	try:
 		Usuario.objects(id=usuario_id).update_one(pull__materias___id=materia_id)
 		return
