@@ -48,16 +48,37 @@ def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 	try:
 		usuario		= Usuario.objects.get(id=usuario_id)
 		provaBase	= usuario.materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+		ids			= []
+
 		data.pop("timestamp", None)
 		data["timeupdate"]	= datetime.now()
 		if data["questoes"]:
 			for key, value in enumerate(data["questoes"]):
-				if not hasattr(value, "_id"):
-					questao					= Questao(**value)
+				if not "_id" in value:
+					questao	= Questao(**value)
 					provaBase.questoes.append(questao)
-					data["questoes"][key]	= json.loads(questao.to_json())
+					ids.append(questao["_id"])
+					value	= json.loads(questao.to_json())
+				else:
+					questao	= provaBase.questoes.get(_id=value["_id"])
+					ids.append(questao["_id"])
+					for k, v in value.items():
+						questao[k]	= v
+			data.pop("questoes")
 			usuario.save()
 			usuario.reload()
+			provaBase	= usuario.materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
+			questoes	= provaBase.questoes
+			for questao in questoes:
+				if questao["_id"] in ids:
+					ids.pop(ids.index(questao["_id"]))
+				else:
+					ids.append(questao["_id"])
+			for id in ids:
+				provaBase.questoes.filter(_id=id).delete()
+			usuario.save()
+			usuario.reload()
+			provaBase	= usuario.materias.get(_id=materia_id).provas_bases.get(_id=provaBase_id)
 		for key, value in data.items():
 			provaBase[key]	= value
 		usuario.save()
