@@ -11,8 +11,10 @@ from	.resposta	import schema_resposta, Resposta
 schema_realizacao	= {
 	"type":	"object",
 	"properties": {
-		"aluno": schema_aluno,
-		"resposta": {
+		"aluno": {
+			"type": "string"
+		},
+		"respostas": {
 			"type": "array",
 			"items": schema_resposta
 		},
@@ -43,7 +45,9 @@ class RealizacaoType(hug.types.Type):
 
 class Realizacao(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
-	aluno		= ReferenceField('Aluno')
-	resposta	= EmbeddedDocumentListField(Resposta)
+	aluno		= EmbeddedDocumentField(Aluno)
+	respostas	= EmbeddedDocumentListField(Resposta)
 	correta		= BooleanField()
 	meioCorreta	= BooleanField()
+	timestamp	= DateTimeField(default=datetime.now())
+	timeupdate	= DateTimeField(default=datetime.now())

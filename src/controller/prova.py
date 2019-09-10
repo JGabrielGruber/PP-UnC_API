@@ -102,9 +102,5 @@ def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		return { "error": "bad_gateway" }
 
 def dataProva(data):
-	for item in data["realizacoes"]:
-		item.pop('respostas', None)
-		item.pop('nota', None)
-		item.pop('timestamp', None)
-		item.pop('timeupdate', None)
+	data.pop("realizacoes", None)
 	return data

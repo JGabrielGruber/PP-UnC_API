@@ -8,6 +8,9 @@ from	bson.objectid	import ObjectId
 schema_resposta	= {
 	"type":	"object",
 	"properties": {
+		"questao": {
+			"type": "string"
+		},
 		"escolhas": {
 			"type": "array",
 			"items": {
@@ -23,7 +26,10 @@ schema_resposta	= {
 		"meioCorreta": {
 			"type": "boolean"
 		}
-	}
+	},
+	"required": [
+		"questao"
+	]
 }
 
 class RespostaType(hug.types.Type):
@@ -41,6 +47,7 @@ class RespostaType(hug.types.Type):
 
 class Resposta(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
+	questao		= ObjectIdField(required=True)
 	escolhas	= ListField(IntField())
 	resposta	= StringField()
 	correta		= BooleanField()
