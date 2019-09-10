@@ -5,6 +5,7 @@ from	datetime	import datetime
 from	model.usuario		import Usuario
 from	model.realizacao	import RealizacaoType, Realizacao
 from	model.resposta		import Resposta
+from	controller			import auth
 
 def getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -34,12 +35,29 @@ def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, real
 
 def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
-		usuario		= Usuario.objects.get(id=usuario_id)
-		aluno		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=data["aluno"])
+		usuario	= Usuario.objects.get(id=usuario_id)
+		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=data["aluno"])
+		prova	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data.pop("aluno")
 		realizacao	= Realizacao(aluno=aluno, **data)
-		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.append(realizacao)
+		prova.realizacoes.append(realizacao)
 		usuario.save()
+		auth.sendToken(response, "Link de acesso da prova", {
+			"name": usuario['nome'],
+			"client_id": usuario['id'],
+			"email": usuario['email']
+		}, {
+			"name": aluno['nome'],
+			"client_id": aluno['_id'],
+			"email": aluno['email'],
+			"minutes": prova['duracao']
+		}, [
+			usuario_id,
+			materia_id,
+			turma_id,
+			prova_id,
+			realizacao["_id"]
+		])
 		response.status = HTTP_201
 		return json.loads(realizacao.to_json())
 	except Exception as e:
