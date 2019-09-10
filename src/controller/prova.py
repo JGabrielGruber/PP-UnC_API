@@ -94,7 +94,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
-		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).filter(_id=provaBase_id).delete()
+		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.filter(_id=prova_id).delete()
 		usuario.save()
 		return
 	except Exception as e:
