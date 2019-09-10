@@ -14,7 +14,7 @@ def get_index(
 ):
 	return controllerRealizacao.getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id)
 
-@hug.get('/{realizacao_id}', requires=auth.ownerAccess())
+@hug.get('/{realizacao_id}', requires=auth.advancedAccess())
 def get_byId(
 	realizacao_id: hug.types.text,
 	prova_id,
@@ -36,7 +36,7 @@ def post_data(
 ):
 	return controllerRealizacao.newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao)
 
-@hug.put('/{realizacao_id}', requires=auth.ownerAccess())
+@hug.put('/{realizacao_id}', requires=auth.advancedAccess())
 def put_data(
 	realizacao_id: hug.types.text,
 	prova_id,

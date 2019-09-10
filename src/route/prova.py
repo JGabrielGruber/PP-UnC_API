@@ -14,7 +14,7 @@ def get_index(
 ):
 	return controllerProva.getProvas(response, usuario_id, materia_id, turma_id)
 
-@hug.get('/{prova_id}', requires=auth.ownerAccess())
+@hug.get('/{prova_id}', requires=auth.advancedAccess())
 def get_byId(
 	prova_id: hug.types.text,
 	turma_id,

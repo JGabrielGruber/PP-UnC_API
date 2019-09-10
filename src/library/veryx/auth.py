@@ -45,10 +45,16 @@ def advancedAccess(request, response, level="empresa", context=None, **kwargs):
 			secret_key	= getSecret()
 
 			try:
-				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
-				id		= request.relative_uri.split('/')[-2]
-				if str(content["client_id"]) == str(id) or content["level"] == level or content["level"] == "admin":
-					content["id"]	= id
+				content		= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
+				ids			= request.relative_uri.split('/')
+				aluno_id	= Usuario.objects.get(id=ids[2]).materias.get(_id=ids[4]).turmas.get(_id=ids[6]).provas.get(_id=ids[8]).realizacoes.get(_id=ids[10]).aluno._id
+				usuario_id	= Usuario.objects.get(id=ids[2]).email
+				if content['level'] == "aluno":
+					expiration	= datetime.strptime(content["token_expiration_date"], "%Y-%m-%d %H:%M:%S")
+					if str(content['client_id']) == aluno_id and expiration >= datetime.now():
+						response.append_header('locals', content)
+						return True
+				elif str(content['client_id']) == str(usuario_id) or content["level"] == "admin":
 					response.append_header('locals', content)
 					return True
 			except jwt.DecodeError:
@@ -71,6 +77,7 @@ def ownerAccess(request, response, level="basic", context=None, **kwargs):
 
 			try:
 				content	= jwt.decode(token.encode('utf8'), secret_key, algorithm='HS256')
+				print(request.relative_uri.split('/'))
 				id		= Usuario.objects.get(id=request.relative_uri.split('/')[2]).email
 				if str(content['client_id']) == str(id) or content["level"] == "admin":
 					response.append_header('locals', content)
