@@ -44,19 +44,20 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 		usuario.save()
 		auth.sendToken(response, "Link de acesso da prova", {
 			"name": usuario['nome'],
-			"client_id": usuario['id'],
+			"client_id": str(usuario['id']),
 			"email": usuario['email']
 		}, {
 			"name": aluno['nome'],
-			"client_id": aluno['_id'],
+			"client_id": str(aluno['_id']),
 			"email": aluno['email'],
-			"minutes": prova['duracao']
+			"minutes": prova['duracao'],
+			"level": "aluno"
 		}, [
 			usuario_id,
 			materia_id,
 			turma_id,
 			prova_id,
-			realizacao["_id"]
+			str(realizacao["_id"])
 		])
 		response.status = HTTP_201
 		return json.loads(realizacao.to_json())

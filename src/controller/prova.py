@@ -56,7 +56,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 		data.pop("realizacoes", None)
 		data.pop("_id", None)
 		data["timeupdate"]	= datetime.now()
-		if data["questoes"]:
+		if hasattr(data, "questoes"):
 			for key, value in enumerate(data["questoes"]):
 				if not "_id" in value:
 					questao	= Questao(**value)
