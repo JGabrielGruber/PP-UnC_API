@@ -64,7 +64,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def deleteTurma(response, usuario_id, materia_id, turma_id):
+def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		usuario.materias.get(_id=materia_id).turmas.filter(_id=turma_id).delete()

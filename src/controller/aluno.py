@@ -55,7 +55,7 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def deleteAluno(response, usuario_id, materia_id, turma_id, aluno_id):
+def deleteAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.filter(_id=aluno_id).delete()

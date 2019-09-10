@@ -61,7 +61,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def deleteRealizacao(response, usuario_id, materia_id, turma_id, realizacao_id, prova_id):
+def deleteRealizacaoById(response, usuario_id, materia_id, turma_id, realizacao_id, prova_id):
 	locals	= eval(response.get_header("locals"))
 	try:
 		realizacao	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
