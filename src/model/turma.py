@@ -44,7 +44,7 @@ class TurmaType(hug.types.Type):
 
 	def __call__(self, value):
 		try:
-			validate(value, schema_prova)
+			validate(value, schema_turma)
 			return value
 		except exceptions.ValidationError as e:
 			raise ValueError({
