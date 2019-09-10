@@ -89,7 +89,7 @@ def removeAuth(response, client_id):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
-def sendToken(response, title, sender, receiver):
+def sendReset(response, title, sender, receiver):
 	token = jwt.encode({
 			"client_id": receiver['client_id'],
 			"token_expiration_date": format(datetime.now() + timedelta(hours=1), "%Y-%m-%d %H:%M:%S")
@@ -138,20 +138,70 @@ def sendToken(response, title, sender, receiver):
 
 	return ""
 
-def getData(response):
-	locals		= eval(response.get_header("locals"))
-	level		= locals['level']
-	client_id	= locals['client_id']
-	data		= False
-	if level == "basic":
-		data	= db_data.cliente.find_one({ 'cpf': client_id })
-	elif level == "empresa":
-		data	= db_data.empresa.find_one({ 'cnpj': client_id })
-	if data:
-		data.pop('_id')
-		data.pop('senha')
-		return data
+def sendToken(response, title, sender, receiver, data):
+	expiration	= format(datetime.now() + timedelta(minutes=receiver['minutes']), "%Y-%m-%d %H:%M:%S")
+	token = jwt.encode({
+			"client_id": receiver['client_id'],
+			"token_expiration_date": expiration,
+			"data": data,
+			"level": receiver['level']
+		}, getSecret(), algorithm="HS256"
+	).decode('utf8')
+	link = "https://127.0.0.1/realizarProva?token=" + token
+	msg = EmailMessage()
+	msg['Subject'] = title
+	msg['From'] = Address(sender['name'], sender['client_id'], sender['email'])
+	msg['To'] = (Address(receiver['name'], str(receiver['client_id']), receiver['email']))
+	content = """\
+	Olá,
+
+	Há uma prova para você realizar.
+	Use este link[1] para poder acessar a mesma. Ele irá expirar em [2]{0}!
+
+	[1]{0}
+
+	Este é um email automático, não o responda!
+	"""
+	msg.set_content(content.format(link, expiration))
+	print(token)
+	asparagus_cid = make_msgid()
+
+	content = """\
+	<html>
+	  <head></head>
+	  <body>
+		<p>Olá,</p>
+		<p>Há uma prova para você realizar.</br>
+		Use este <a href="{0}">link</a> para poder acessar a mesma. Ele irá expirar em {1}!</p>
+		<p>Este é um email automático, não o responda!</p>
+	  </body>
+	</html>
+	""".format(link, expiration, asparagus_cid=asparagus_cid[1:-1])
+
+	msg.add_alternative(content, subtype='html')
+
+	try:
+		with smtplib.SMTP('localhost') as s:
+			s.send_message(msg)
+			return ""
+	except Exception as e:
+		response.status = HTTP_502
+		return { "error": "bad_gateway" }
+
 	return ""
+
+def getData(response):
+	locals	= eval(response.get_header("locals"))
+	data	= locals["data"]
+	if data:
+		return {
+			"client_id": locals["client_id"],
+			"url": "usuarios/" + data[0] + "materias/" + data[1] + "turmas/" + data[2] + "provas/" + data[3] + "realizacoes/" + data[4]
+		}
+	else:
+		return {
+			"client_id": locals["client_id"]
+		}
 
 def getSecret():
 	if not os.path.exists('./.cache'):
