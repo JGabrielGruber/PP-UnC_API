@@ -7,7 +7,7 @@ from	controller		import auth
 
 def getCursos(response):
 	try:
-		data	= json.loads(Curso.objects.to_json())
+		data	= json.loads(json.dumps(Curso.objects.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 
 	except Exception as e:
@@ -20,7 +20,7 @@ def newCurso(response, data):
 		curso	= Curso(**data)
 		usuario.save()
 		response.status = HTTP_201
-		return json.loads(curso.to_json())
+		return json.loads(json.dumps(curso.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

@@ -7,7 +7,7 @@ from	controller		import auth
 
 def getUsuarios(response):
 	try:
-		data	= json.loads(Usuario.objects.to_json())
+		data	= json.loads(json.dumps(Usuario.objects.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		for item in data:
 			item.pop('senha', None)
 			item.pop('materias', None)
@@ -19,7 +19,7 @@ def getUsuarios(response):
 
 def getUsuarioById(response, id):
 	try:
-		data	= json.loads(Usuario.objects.get(id=id).to_json())
+		data	= json.loads(json.dumps(Usuario.objects.get(id=id).to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return dataUsuario(data)
 
 	except Exception as e:
@@ -43,7 +43,7 @@ def newUsuario(response, data):
 		usuario["timeupdate"]	= datetime.now()
 		usuario.save()
 		response.status = HTTP_201
-		return dataUsuario(json.loads(usuario.to_json()))
+		return dataUsuario(json.loads(json.dumps(usuario.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -61,7 +61,7 @@ def updateUsuario(response, id, data):
 		for key, value in data.items():
 			usuario[key]	= value
 		usuario.save()
-		return dataUsuario(json.loads(usuario.to_json()))
+		return dataUsuario(json.loads(json.dumps(usuario.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

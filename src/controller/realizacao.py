@@ -13,7 +13,7 @@ def getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id):
 		data		= []
 		if realizacoes:
 			for realizacao in realizacoes:
-				data.append(json.loads(realizacao.to_json()))
+				data.append(json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		for item in data:
 			item.pop('respostas', None)
 		return data
@@ -27,7 +27,7 @@ def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, real
 		realizacao	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
 		data	= []
 		if realizacao:
-			data	= json.loads(realizacao.to_json())
+			data	= json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -60,7 +60,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 			str(realizacao["_id"])
 		])
 		response.status = HTTP_201
-		return json.loads(realizacao.to_json())
+		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -94,7 +94,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 		for key, value in data.items():
 			realizacao[key]	= value
 		usuario.save()
-		return json.loads(realizacao.to_json())
+		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

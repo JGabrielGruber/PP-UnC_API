@@ -12,7 +12,7 @@ def getMaterias(response, usuario_id):
 		data		= []
 		if materias:
 			for materia in materias:
-				data.append(json.loads(materia.to_json()))
+				data.append(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		for item in data:
 			item.pop('turmas', None)
 			item.pop('provasBases', None)
@@ -26,7 +26,7 @@ def getMateriaById(response, usuario_id, materia_id):
 		materia		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id)
 		data		= []
 		if materia:
-			data	= dataMateria(json.loads(materia.to_json()))
+			data	= dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -41,7 +41,7 @@ def newMateria(response, usuario_id, data):
 		usuario.materias.append(materia)
 		usuario.save()
 		response.status = HTTP_201
-		return dataMateria(json.loads(materia.to_json()))
+		return dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -57,7 +57,7 @@ def updateMateria(response, usuario_id, materia_id, data):
 		for key, value in data.items():
 			materia[key]	= value
 		usuario.save()
-		return dataMateria(json.loads(materia.to_json()))
+		return dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

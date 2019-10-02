@@ -13,7 +13,7 @@ def getTurmas(response, usuario_id, materia_id):
 		data	= []
 		if turmas:
 			for turma in turmas:
-				data.append(json.loads(turma.to_json()))
+				data.append(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		for item in data:
 			item.pop('alunos', None)
 			item.pop('provas', None)
@@ -27,7 +27,7 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 		turma		= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id)
 		data		= []
 		if turma:
-			data	= json.loads(turma.to_json())
+			data	= json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return dataTurma(data)
 	except Exception as e:
 		response.status = HTTP_502
@@ -42,7 +42,7 @@ def newTurma(response, usuario_id, materia_id, data):
 		usuario.materias.get(_id=materia_id).turmas.append(turma)
 		usuario.save()
 		response.status = HTTP_201
-		return dataTurma(json.loads(turma.to_json()))
+		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -59,7 +59,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 		for key, value in data.items():
 			turma[key]	= value
 		usuario.save()
-		return dataTurma(json.loads(turma.to_json()))
+		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

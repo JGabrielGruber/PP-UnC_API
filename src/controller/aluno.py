@@ -11,7 +11,7 @@ def getAlunos(response, usuario_id, materia_id, turma_id):
 		data	= []
 		if alunos:
 			for aluno in alunos:
-				data.append(json.loads(aluno.to_json()))
+				data.append(json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -22,7 +22,7 @@ def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno_id)
 		data	= []
 		if aluno:
-			data	= json.loads(aluno.to_json())
+			data	= json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -35,7 +35,7 @@ def newAluno(response, usuario_id, materia_id, turma_id, data):
 		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.append(aluno)
 		usuario.save()
 		response.status = HTTP_201
-		return json.loads(aluno.to_json())
+		return json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -50,7 +50,7 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 		for key, value in data.items():
 			aluno[key]	= value
 		usuario.save()
-		return json.loads(aluno.to_json())
+		return json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }

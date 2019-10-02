@@ -12,7 +12,7 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 		data	= []
 		if provas:
 			for prova in provas:
-				data.append(json.loads(prova.to_json()))
+				data.append(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		for item in data:
 			item.pop('realizacoes', None)
 			item.pop('questoes', None)
@@ -26,7 +26,7 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		prova	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data	= []
 		if prova:
-			data	= dataProva(json.loads(prova.to_json()))
+			data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
 		response.status = HTTP_502
@@ -41,7 +41,7 @@ def newProva(response, usuario_id, materia_id, turma_id, data):
 		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.append(prova)
 		usuario.save()
 		response.status = HTTP_201
-		return dataProva(json.loads(prova.to_json()))
+		return dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
@@ -86,7 +86,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 		for key, value in data.items():
 			prova[key]	= value
 		usuario.save()
-		return json.loads(prova.to_json())
+		return json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
