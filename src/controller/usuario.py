@@ -26,6 +26,16 @@ def getUsuarioById(response, id):
 		response.status = HTTP_502
 		return { "error": "bad_gateway" }
 
+def getUsuarioByEmail(response, email):
+	try:
+		data	= json.loads(json.dumps(Usuario.objects.get(email=email).to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
+		return data["_id"]
+
+	except Exception as e:
+		print(e)
+		response.status = HTTP_502
+		return { "error": "bad_gateway" }
+
 def newUsuario(response, data):
 	try:
 		data["senha"]	= auth.setAuth(

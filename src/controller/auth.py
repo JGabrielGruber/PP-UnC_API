@@ -13,6 +13,7 @@ from	library.cryption	import	cryptKey
 from	conf				import	db_auth, db_data
 from	model.usuario		import	Usuario
 from	model.login			import	Login
+from	controller.usuario	import	getUsuarioByEmail
 
 # TODO: Implementar criação de token para aluno com base na realização que ele irá fazer, e também, com base na data que ele poderá usar este token para acessar esta prova
 #		O id da realização dele e da prova não devem estr presente na URL
@@ -192,7 +193,9 @@ def sendToken(response, title, sender, receiver, data):
 
 def getData(response):
 	locals	= eval(response.get_header("locals"))
-	data	= locals["data"]
+	data	= None
+	if (hasattr(locals, "data")):
+		data	= locals["data"]
 	if data:
 		return {
 			"client_id": locals["client_id"],
@@ -200,7 +203,7 @@ def getData(response):
 		}
 	else:
 		return {
-			"client_id": locals["client_id"]
+			"client_id": getUsuarioByEmail(response, locals["client_id"])
 		}
 
 def getSecret():
