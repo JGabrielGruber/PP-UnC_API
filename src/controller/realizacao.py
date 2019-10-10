@@ -6,6 +6,7 @@ from	model.usuario		import Usuario
 from	model.realizacao	import RealizacaoType, Realizacao
 from	model.resposta		import Resposta
 from	controller			import auth
+from	library				import errorHandler
 
 def getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -18,8 +19,7 @@ def getRealizacaos(response, usuario_id, materia_id, turma_id, prova_id):
 			item.pop('respostas', None)
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id):
 	locals	= eval(response.get_header("locals"))
@@ -30,8 +30,7 @@ def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, real
 			data	= json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
@@ -62,8 +61,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 		response.status = HTTP_201
 		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id, data):
 	locals	= eval(response.get_header("locals"))
@@ -96,8 +94,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 		usuario.save()
 		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteRealizacaoById(response, usuario_id, materia_id, turma_id, realizacao_id, prova_id):
 	try:
@@ -106,5 +103,4 @@ def deleteRealizacaoById(response, usuario_id, materia_id, turma_id, realizacao_
 		usuario.save()
 		return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)

@@ -6,6 +6,7 @@ from	model.usuario	import Usuario
 from	model.provaBase	import ProvaBaseType, ProvaBase
 from	model.questao	import Questao
 from	controller		import auth
+from	library			import errorHandler
 
 def getProvaBases(response, usuario_id, materia_id):
 	try:
@@ -18,8 +19,7 @@ def getProvaBases(response, usuario_id, materia_id):
 			item.pop('questoes', None)
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 	try:
@@ -29,8 +29,7 @@ def getProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 			data	= json.loads(json.dumps(provaBase.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newProvaBase(response, usuario_id, materia_id, data):
 	try:
@@ -41,8 +40,7 @@ def newProvaBase(response, usuario_id, materia_id, data):
 		response.status = HTTP_201
 		return json.loads(json.dumps(provaBase.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 	try:
@@ -84,8 +82,7 @@ def updateProvaBase(response, usuario_id, materia_id, provaBase_id, data):
 		usuario.save()
 		return json.loads(json.dumps(provaBase.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 	try:
@@ -94,5 +91,4 @@ def deleteProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 		usuario.save()
 		return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)

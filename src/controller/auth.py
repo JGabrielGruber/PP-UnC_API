@@ -9,11 +9,12 @@ from	email.utils				import make_msgid
 from	falcon					import HTTP_400, HTTP_403, HTTP_502
 from	datetime				import datetime, timedelta
 
-from	library.cryption	import	cryptKey
-from	conf				import	db_auth, db_data
-from	model.usuario		import	Usuario
-from	model.login			import	Login
-from	controller.usuario	import	getUsuarioByEmail
+from	library.cryption	import cryptKey
+from	conf				import db_auth, db_data
+from	model.usuario		import Usuario
+from	model.login			import Login
+from	controller.usuario	import getUsuarioByEmail
+from	library				import errorHandler
 
 # TODO: Implementar criação de token para aluno com base na realização que ele irá fazer, e também, com base na data que ele poderá usar este token para acessar esta prova
 #		O id da realização dele e da prova não devem estr presente na URL
@@ -30,9 +31,7 @@ def setAuth(response, data, level="basic"):
 		login.save()
 		return senha
 	except Exception as e:
-		print(e)
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getAuth(response, client_id, client_secret):
 	"""Verify if the login exists"""
@@ -87,8 +86,7 @@ def removeAuth(response, client_id):
 			Login.objects.get(email=client_id).delete()
 			return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def sendReset(response, title, sender, receiver):
 	token = jwt.encode({
@@ -134,8 +132,7 @@ def sendReset(response, title, sender, receiver):
 			s.send_message(msg)
 			return ""
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 	return ""
 
@@ -186,8 +183,7 @@ def sendToken(response, title, sender, receiver, data):
 			s.send_message(msg)
 			return ""
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 	return ""
 

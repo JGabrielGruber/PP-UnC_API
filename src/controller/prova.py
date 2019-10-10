@@ -5,6 +5,7 @@ from	datetime	import datetime
 from	model.usuario	import Usuario
 from	model.prova		import ProvaType, Prova
 from	model.questao	import Questao
+from	library			import errorHandler
 
 def getProvas(response, usuario_id, materia_id, turma_id):
 	try:
@@ -18,8 +19,7 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 			item.pop('questoes', None)
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -29,8 +29,7 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 			data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newProva(response, usuario_id, materia_id, turma_id, data):
 	try:
@@ -43,8 +42,7 @@ def newProva(response, usuario_id, materia_id, turma_id, data):
 		response.status = HTTP_201
 		return dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
@@ -88,8 +86,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 		usuario.save()
 		return json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -98,8 +95,7 @@ def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		usuario.save()
 		return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def dataProva(data):
 	data.pop("realizacoes", None)

@@ -6,6 +6,7 @@ from	model.usuario	import Usuario
 from	model.materia	import Materia
 from	model.turma		import TurmaType, Turma
 from	controller		import auth
+from	library			import errorHandler
 
 def getTurmas(response, usuario_id, materia_id):
 	try:
@@ -19,8 +20,7 @@ def getTurmas(response, usuario_id, materia_id):
 			item.pop('provas', None)
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
@@ -30,8 +30,7 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 			data	= json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return dataTurma(data)
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newTurma(response, usuario_id, materia_id, data):
 	try:
@@ -44,8 +43,7 @@ def newTurma(response, usuario_id, materia_id, data):
 		response.status = HTTP_201
 		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateTurma(response, usuario_id, materia_id, turma_id, data):
 	try:
@@ -61,8 +59,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 		usuario.save()
 		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
@@ -71,8 +68,7 @@ def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 		usuario.save()
 		return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def dataTurma(data):
 	for item in data["alunos"]:

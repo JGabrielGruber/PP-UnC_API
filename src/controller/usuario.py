@@ -4,6 +4,7 @@ from	datetime	import datetime
 
 from	model.usuario	import Usuario
 from	controller		import auth
+from	library			import errorHandler
 
 def getUsuarios(response):
 	try:
@@ -14,8 +15,7 @@ def getUsuarios(response):
 		return data
 
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getUsuarioById(response, id):
 	try:
@@ -23,8 +23,7 @@ def getUsuarioById(response, id):
 		return dataUsuario(data)
 
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getUsuarioByEmail(response, email):
 	try:
@@ -32,9 +31,7 @@ def getUsuarioByEmail(response, email):
 		return data["_id"]
 
 	except Exception as e:
-		print(e)
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newUsuario(response, data):
 	try:
@@ -47,7 +44,7 @@ def newUsuario(response, data):
 			if data["senha"]["error"]:
 				return data["senha"]
 		except Exception as e:
-			e=e
+			pass
 		usuario	= Usuario(**data)
 		usuario["timestamp"]	= datetime.now()
 		usuario["timeupdate"]	= datetime.now()
@@ -55,8 +52,7 @@ def newUsuario(response, data):
 		response.status = HTTP_201
 		return dataUsuario(json.loads(json.dumps(usuario.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateUsuario(response, id, data):
 	locals	= eval(response.get_header("locals"))
@@ -73,8 +69,7 @@ def updateUsuario(response, id, data):
 		usuario.save()
 		return dataUsuario(json.loads(json.dumps(usuario.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteUsuarioById(response, id):
 	locals	= eval(response.get_header("locals"))
@@ -86,8 +81,7 @@ def deleteUsuarioById(response, id):
 			return delete
 
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def dataUsuario(data):
 	data.pop('senha')

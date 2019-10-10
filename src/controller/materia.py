@@ -5,6 +5,7 @@ from	datetime	import datetime
 from	model.usuario	import Usuario
 from	model.materia	import MateriaType, Materia
 from	controller		import auth
+from	library			import errorHandler
 
 def getMaterias(response, usuario_id):
 	try:
@@ -18,8 +19,7 @@ def getMaterias(response, usuario_id):
 			item.pop('provasBases', None)
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getMateriaById(response, usuario_id, materia_id):
 	try:
@@ -29,8 +29,7 @@ def getMateriaById(response, usuario_id, materia_id):
 			data	= dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def newMateria(response, usuario_id, data):
 	try:
@@ -43,8 +42,7 @@ def newMateria(response, usuario_id, data):
 		response.status = HTTP_201
 		return dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def updateMateria(response, usuario_id, materia_id, data):
 	try:
@@ -59,16 +57,14 @@ def updateMateria(response, usuario_id, materia_id, data):
 		usuario.save()
 		return dataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def deleteMateriaById(response, usuario_id, materia_id):
 	try:
 		Usuario.objects(id=usuario_id).update_one(pull__materias___id=materia_id)
 		return
 	except Exception as e:
-		response.status = HTTP_502
-		return { "error": "bad_gateway" }
+		return errorHandler.handleError(response, e.__class__.__name__)
 
 def dataMateria(data):
 	for item in data["turmas"]:
