@@ -1,6 +1,7 @@
 import	json
 import	mongoengine
 import	os
+import	time
 
 def getConf():
 	if not os.path.exists('./.cache'):
@@ -16,5 +17,14 @@ def getConf():
 			} } ))
 			getConf()
 
-db_auth	= mongoengine.connect('PPUnCAuth', host=getConf()['db_auth_host'], alias="auth")
-db_data	= mongoengine.connect('PPUnC', host=getConf()['db_data_host'], alias="default")
+def connectDB():
+	try:
+		db_auth	= mongoengine.connect('PPUnCAuth', host=getConf()['db_auth_host'], alias="auth")
+		db_data	= mongoengine.connect('PPUnC', host=getConf()['db_data_host'], alias="default")
+	except Exception as e:
+		print(e)
+		time.sleep(10)
+		print("Retrying to connect...")
+		connectDB()
+
+connectDB()
