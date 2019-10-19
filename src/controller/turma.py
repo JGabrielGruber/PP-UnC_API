@@ -14,10 +14,7 @@ def getTurmas(response, usuario_id, materia_id):
 		data	= []
 		if turmas:
 			for turma in turmas:
-				data.append(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
-		for item in data:
-			item.pop('alunos', None)
-			item.pop('provas', None)
+				data.append(smallDataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		return data
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
@@ -69,6 +66,22 @@ def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 		return
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
+
+def smallDataTurma(data):
+	for item in data["alunos"]:
+		item.pop('nome', None)
+		item.pop('email', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
+	for item in data["provas"]:
+		item.pop('titulo', None)
+		item.pop('descricao', None)
+		item.pop('duracao', None)
+		item.pop('questoes', None)
+		item.pop('realizacoes', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
+	return data
 
 def dataTurma(data):
 	for item in data["alunos"]:

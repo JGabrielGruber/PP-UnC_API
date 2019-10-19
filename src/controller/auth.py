@@ -10,7 +10,6 @@ from	falcon					import HTTP_400, HTTP_403, HTTP_502
 from	datetime				import datetime, timedelta
 
 from	library.cryption	import cryptKey
-from	conf				import db_auth, db_data
 from	model.usuario		import Usuario
 from	model.login			import Login
 from	controller.usuario	import getUsuarioByEmail

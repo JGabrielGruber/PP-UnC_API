@@ -14,7 +14,7 @@ def getProvaBases(response, usuario_id, materia_id):
 		data		= []
 		if provasBases:
 			for provaBase in provasBases:
-				data.append(json.loads(json.dumps(provaBase.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
+				data.append(smallDataProvaBase(json.loads(json.dumps(provaBase.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		for item in data:
 			item.pop('questoes', None)
 		return data
@@ -92,3 +92,14 @@ def deleteProvaBaseById(response, usuario_id, materia_id, provaBase_id):
 		return
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
+
+def smallDataProvaBase(data):
+	for item in data["questoes"]:
+		item.pop('descricao', None)
+		item.pop('isAlternativa', None)
+		item.pop('alternativas', None)
+		item.pop('isMultipla', None)
+		item.pop('corretas', None)
+		item.pop('esperado', None)
+		item.pop('peso', None)
+	return data

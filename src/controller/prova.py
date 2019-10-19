@@ -13,10 +13,7 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 		data	= []
 		if provas:
 			for prova in provas:
-				data.append(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
-		for item in data:
-			item.pop('realizacoes', None)
-			item.pop('questoes', None)
+				data.append(smallDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		return data
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
@@ -96,6 +93,24 @@ def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		return
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
+
+def smallDataProva(data):
+	for item in data["realizacoes"]:
+		item.pop('aluno', None)
+		item.pop('respostas', None)
+		item.pop('finalizada', None)
+		item.pop('total', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
+	for item in data["questoes"]:
+		item.pop('descricao', None)
+		item.pop('isAlternativa', None)
+		item.pop('alternativas', None)
+		item.pop('isMultipla', None)
+		item.pop('corretas', None)
+		item.pop('esperado', None)
+		item.pop('peso', None)
+	return data
 
 def dataProva(data):
 	data.pop("realizacoes", None)

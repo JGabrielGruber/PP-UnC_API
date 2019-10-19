@@ -13,12 +13,10 @@ def getMaterias(response, usuario_id):
 		data		= []
 		if materias:
 			for materia in materias:
-				data.append(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
-		for item in data:
-			item.pop('turmas', None)
-			item.pop('provasBases', None)
+				data.append(smallDataMateria(json.loads(json.dumps(materia.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		return data
 	except Exception as e:
+		print(e)
 		return errorHandler.handleError(response, e.__class__.__name__)
 
 def getMateriaById(response, usuario_id, materia_id):
@@ -65,6 +63,24 @@ def deleteMateriaById(response, usuario_id, materia_id):
 		return
 	except Exception as e:
 		return errorHandler.handleError(response, e.__class__.__name__)
+
+def smallDataMateria(data):
+	for item in data["turmas"]:
+		item.pop('titulo', None)
+		item.pop('ano', None)
+		item.pop('alunos', None)
+		item.pop('provas', None)
+		item.pop('semestre', None)
+		item.pop('descricao', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
+	for item in data["provas_bases"]:
+		item.pop('titulo', None)
+		item.pop('questoes', None)
+		item.pop('descricao', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
+	return data
 
 def dataMateria(data):
 	for item in data["turmas"]:
