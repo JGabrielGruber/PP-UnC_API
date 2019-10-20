@@ -22,7 +22,8 @@ schema_prova_base	= {
 		}
 	},
 	"required": [
-		"titulo"
+		"titulo",
+		"descricao"
 	]
 }
 
