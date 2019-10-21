@@ -85,7 +85,6 @@ def smallDataTurma(data):
 
 def dataTurma(data):
 	for item in data["alunos"]:
-		item.pop('email', None)
 		item.pop('timestamp', None)
 		item.pop('timeupdate', None)
 	for item in data["provas"]:
