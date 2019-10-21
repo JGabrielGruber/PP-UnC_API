@@ -15,7 +15,7 @@ def getAlunos(response, usuario_id, materia_id, turma_id):
 				data.append(json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 	try:
@@ -25,7 +25,7 @@ def getAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 			data	= json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return data
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def newAluno(response, usuario_id, materia_id, turma_id, data):
 	try:
@@ -36,7 +36,7 @@ def newAluno(response, usuario_id, materia_id, turma_id, data):
 		response.status = HTTP_201
 		return json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 	try:
@@ -50,7 +50,7 @@ def updateAluno(response, usuario_id, materia_id, turma_id, aluno_id, data):
 		usuario.save()
 		return json.loads(json.dumps(aluno.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def deleteAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 	try:
@@ -59,4 +59,4 @@ def deleteAlunoById(response, usuario_id, materia_id, turma_id, aluno_id):
 		usuario.save()
 		return
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)

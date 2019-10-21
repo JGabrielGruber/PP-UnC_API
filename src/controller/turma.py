@@ -17,7 +17,7 @@ def getTurmas(response, usuario_id, materia_id):
 				data.append(smallDataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		return data
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def getTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
@@ -27,7 +27,7 @@ def getTurmaById(response, usuario_id, materia_id, turma_id):
 			data	= json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		return dataTurma(data)
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def newTurma(response, usuario_id, materia_id, data):
 	try:
@@ -40,7 +40,7 @@ def newTurma(response, usuario_id, materia_id, data):
 		response.status = HTTP_201
 		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def updateTurma(response, usuario_id, materia_id, turma_id, data):
 	try:
@@ -56,7 +56,7 @@ def updateTurma(response, usuario_id, materia_id, turma_id, data):
 		usuario.save()
 		return dataTurma(json.loads(json.dumps(turma.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 	try:
@@ -65,7 +65,7 @@ def deleteTurmaById(response, usuario_id, materia_id, turma_id):
 		usuario.save()
 		return
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def smallDataTurma(data):
 	for item in data["alunos"]:

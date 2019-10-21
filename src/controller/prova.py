@@ -16,7 +16,7 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 				data.append(smallDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))))
 		return data
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -26,7 +26,7 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 			data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def newProva(response, usuario_id, materia_id, turma_id, data):
 	try:
@@ -39,13 +39,13 @@ def newProva(response, usuario_id, materia_id, turma_id, data):
 		response.status = HTTP_201
 		return dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
 		prova	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
-		ids			= []
+		ids		= []
 
 		data.pop("timestamp", None)
 		data.pop("realizacoes", None)
@@ -83,7 +83,7 @@ def updateProva(response, usuario_id, materia_id, turma_id, prova_id, data):
 		usuario.save()
 		return json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 	try:
@@ -92,7 +92,7 @@ def deleteProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		usuario.save()
 		return
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def smallDataProva(data):
 	for item in data["realizacoes"]:

@@ -30,7 +30,7 @@ def setAuth(response, data, level="basic"):
 		login.save()
 		return senha
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def getAuth(response, client_id, client_secret):
 	"""Verify if the login exists"""
@@ -85,7 +85,7 @@ def removeAuth(response, client_id):
 			Login.objects.get(email=client_id).delete()
 			return
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 def sendReset(response, title, sender, receiver):
 	token = jwt.encode({
@@ -131,7 +131,7 @@ def sendReset(response, title, sender, receiver):
 			s.send_message(msg)
 			return ""
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 	return ""
 
@@ -160,7 +160,6 @@ def sendToken(response, title, sender, receiver, data):
 	Este é um email automático, não o responda!
 	"""
 	msg.set_content(content.format(link, expiration))
-	print(token)
 	asparagus_cid = make_msgid()
 
 	content = """\
@@ -182,7 +181,7 @@ def sendToken(response, title, sender, receiver, data):
 			s.send_message(msg)
 			return ""
 	except Exception as e:
-		return errorHandler.handleError(response, e.__class__.__name__)
+		return errorHandler.handleError(response, e)
 
 	return ""
 
