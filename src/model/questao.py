@@ -17,7 +17,12 @@ schema_questao	= {
 		"alternativas": {
 			"type": "array",
 			"items": {
-				"type": "string"
+				"type": "object",
+				"properties": {
+					"descricao": {
+						"type": "string"
+					}
+				}
 			}
 		},
 		"isMultipla": {
@@ -26,7 +31,7 @@ schema_questao	= {
 		"corretas": {
 			"type": "array",
 			"items": {
-				"type": "number"
+				"type": "string"
 			}
 		},
 		"esperado": {
@@ -35,11 +40,15 @@ schema_questao	= {
 		"peso": {
 			"type": "number"
 		},
+		"numero": {
+			"type": "number"
+		},
 	},
 	"required": [
 		"descricao",
 		"isAlternativa",
-		"peso"
+		"peso",
+		"numero"
 	]
 }
 
@@ -60,8 +69,9 @@ class Questao(EmbeddedDocument):
 	_id				= ObjectIdField(required=True, default=lambda: ObjectId())
 	descricao		= StringField(required=True)
 	isAlternativa	= BooleanField(required=True)
-	alternativas	= ListField(StringField())
+	alternativas	= ListField(DynamicField())
 	isMultipla		= BooleanField()
-	corretas		= ListField(IntField())
+	corretas		= ListField(DynamicField())
 	esperado		= StringField()
 	peso			= FloatField(max_length=2, required=True)
+	numero			= IntField()
