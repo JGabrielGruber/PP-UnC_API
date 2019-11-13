@@ -18,8 +18,14 @@ schema_realizacao	= {
 			"type": "array",
 			"items": schema_resposta
 		},
+		"iniciada": {
+			"type": "boolean"
+		},
 		"finalizada": {
 			"type": "boolean"
+		},
+		"limite": {
+			"type": "string"
 		},
 		"total": {
 			"type": "number"
@@ -47,7 +53,9 @@ class Realizacao(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	aluno		= EmbeddedDocumentField(Aluno)
 	respostas	= EmbeddedDocumentListField(Resposta)
+	iniciada	= BooleanField()
 	finalizada	= BooleanField()
+	limite		= DateTimeField()
 	total		= FloatField()
 	timestamp	= DateTimeField(default=datetime.now())
 	timeupdate	= DateTimeField(default=datetime.now())
