@@ -29,6 +29,9 @@ schema_realizacao	= {
 		},
 		"total": {
 			"type": "number"
+		},
+		"timestarted": {
+			"type": "string"
 		}
 	},
 	"required": [
@@ -57,5 +60,6 @@ class Realizacao(EmbeddedDocument):
 	finalizada	= BooleanField()
 	limite		= DateTimeField()
 	total		= FloatField()
+	timestarted	= DateTimeField()
 	timestamp	= DateTimeField(default=datetime.now())
 	timeupdate	= DateTimeField(default=datetime.now())
