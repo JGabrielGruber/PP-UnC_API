@@ -159,6 +159,7 @@ def sendToken(response, title, sender, receiver, data):
 
 	Este é um email automático, não o responda!
 	"""
+	print(link)
 	msg.set_content(content.format(link, expiration))
 	asparagus_cid = make_msgid()
 
@@ -188,12 +189,12 @@ def sendToken(response, title, sender, receiver, data):
 def getData(response):
 	locals	= eval(response.get_header("locals"))
 	data	= None
-	if (hasattr(locals, "data")):
+	if "data" in locals:
 		data	= locals["data"]
 	if data:
 		return {
 			"client_id": locals["client_id"],
-			"url": "usuarios/" + data[0] + "materias/" + data[1] + "turmas/" + data[2] + "provas/" + data[3] + "realizacoes/" + data[4]
+			"url": "usuarios/" + data[0] + "/materias/" + data[1] + "/turmas/" + data[2] + "/provas/" + data[3] + "/realizacoes/" + data[4]
 		}
 	else:
 		return {
