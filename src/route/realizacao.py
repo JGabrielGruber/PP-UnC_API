@@ -27,7 +27,7 @@ def get_byId(
 
 @hug.post('/', requires=auth.ownerAccess())
 def post_data(
-	realizacao: modelRealizacao.RealizacaoType(),
+	realizacao: modelRealizacao.RealizacoesType(),
 	prova_id,
 	turma_id,
 	materia_id,

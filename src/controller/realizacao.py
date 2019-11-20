@@ -34,32 +34,37 @@ def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, real
 
 def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
-		usuario	= Usuario.objects.get(id=usuario_id)
-		aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=data["aluno"])
-		prova	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
-		data.pop("aluno")
-		realizacao	= Realizacao(aluno=aluno, **data)
-		prova.realizacoes.append(realizacao)
-		usuario.save()
-		auth.sendToken(response, "Link de acesso da prova", {
-			"name": usuario['nome'],
-			"client_id": str(usuario['id']),
-			"email": usuario['email']
-		}, {
-			"name": aluno['nome'],
-			"client_id": str(aluno['_id']),
-			"email": aluno['email'],
-			"minutes": prova['duracao'],
-			"level": "aluno"
-		}, [
-			usuario_id,
-			materia_id,
-			turma_id,
-			prova_id,
-			str(realizacao["_id"])
-		])
+		usuario		= Usuario.objects.get(id=usuario_id)
+		prova		= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
+		dataAlunos	= data["alunos"]
+		realizacoes	= []
+		data["limite"] = datetime.fromtimestamp(data["limite"])
+		data.pop("alunos")
+		for aluno in dataAlunos:
+			aluno	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).alunos.get(_id=aluno)
+			realizacao	= Realizacao(aluno=aluno, **data)
+			prova.realizacoes.append(realizacao)
+			usuario.save()
+			auth.sendToken(response, "Link de acesso da prova", {
+				"name": usuario['nome'],
+				"client_id": str(usuario['id']),
+				"email": usuario['email']
+			}, {
+				"name": aluno['nome'],
+				"client_id": str(aluno['_id']),
+				"email": aluno['email'],
+				"minutes": prova['duracao'],
+				"level": "aluno"
+			}, [
+				usuario_id,
+				materia_id,
+				turma_id,
+				prova_id,
+				str(realizacao["_id"])
+			])
+			realizacoes.append(json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		response.status = HTTP_201
-		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
+		return realizacoes
 	except Exception as e:
 		return errorHandler.handleError(response, e)
 
