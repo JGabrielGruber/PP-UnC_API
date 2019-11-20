@@ -25,7 +25,11 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		data	= []
 		if prova:
 			if locals["level"] == "aluno":
-				data	= alunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
+				realizacao	= prova.realizacoes.get(_id=locals["data"][4])
+				if realizacao.iniciada:
+					data	= alunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
+				else:
+					data	= smallAlunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 			else:
 				data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
@@ -116,8 +120,13 @@ def smallDataProva(data):
 		item.pop('peso', None)
 	return data
 
+def smallAlunoDataProva(data):
+	data.pop("realizacoes", None)
+	data.pop("questoes", None)
+	return data
+
 def alunoDataProva(data):
-	item.pop("realizacoes", None)
+	data.pop("realizacoes", None)
 	for item in data["questoes"]:
 		item.pop('corretas', None)
 		item.pop('esperado', None)
