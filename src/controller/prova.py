@@ -113,5 +113,11 @@ def smallDataProva(data):
 	return data
 
 def dataProva(data):
-	data.pop("realizacoes", None)
+	for item in data["realizacoes"]:
+		item.pop('aluno', None)
+		item.pop('respostas', None)
+		item.pop('finalizada', None)
+		item.pop('total', None)
+		item.pop('timestamp', None)
+		item.pop('timeupdate', None)
 	return data
