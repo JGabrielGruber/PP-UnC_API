@@ -68,6 +68,23 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 	except Exception as e:
 		return errorHandler.handleError(response, e)
 
+def startRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id):
+	try:
+		usuario		= Usuario.objects.get(id=usuario_id)
+		realizacao	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
+		if not realizacao.iniciada:
+			questoes	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).questoes.get()
+			realizacao.timeupdate	= datetime.now()
+			realizacao.timestarted	= datetime.now()
+			realizacao.iniciada		= true
+			for questao in questoes:
+				resposta			= Resposta()
+				resposta.questao	= str(questao._id)
+			usuario.save()
+		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
+	except Exception as e:
+		return errorHandler.handleError(response, e)
+
 def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id, data):
 	locals	= eval(response.get_header("locals"))
 	try:
@@ -78,6 +95,9 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 		data["timeupdate"]	= datetime.now()
 		if not locals["level"] == "usuario" and not locals["level"] == "admin":
 			data.pop("total", None)
+			data.pop("timestarted", None)
+			data.pop("limite", None)
+			data.pop("iniciada", None)
 			for resposta in data["respostas"]:
 				resposta.pop("correta", None)
 				resposta.pop("meioCorreta", None)

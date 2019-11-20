@@ -48,6 +48,17 @@ def put_data(
 ):
 	return controllerRealizacao.updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id, realizacao)
 
+@hug.put('/{realizacao_id}/iniciar', requires=auth.advancedAccess())
+def put_data(
+	realizacao_id: hug.types.text,
+	prova_id,
+	turma_id,
+	materia_id,
+	usuario_id,
+	response
+):
+	return controllerRealizacao.startRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id)
+
 @hug.delete('/{realizacao_id}', requires=auth.ownerAccess())
 def delete_data(
 	realizacao_id: hug.types.text,
