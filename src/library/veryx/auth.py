@@ -50,9 +50,13 @@ def advancedAccess(request, response, level="empresa", context=None, **kwargs):
 				ids			= request.relative_uri.split('/')
 				usuario_id	= Usuario.objects.get(id=ids[2]).email
 				if content['level'] == "aluno":
-					aluno_id	= Usuario.objects.get(id=ids[2]).materias.get(_id=ids[4]).turmas.get(_id=ids[6]).provas.get(_id=ids[8]).realizacoes.get(_id=ids[10]).aluno._id
-					expiration	= datetime.strptime(content["token_expiration_date"], "%Y-%m-%d %H:%M:%S")
-					if str(content['client_id']) == str(aluno_id) and expiration >= datetime.now():
+					if 10 in ids:
+						aluno_id	= Usuario.objects.get(id=ids[2]).materias.get(_id=ids[4]).turmas.get(_id=ids[6]).provas.get(_id=ids[8]).realizacoes.get(_id=ids[10]).aluno._id
+						expiration	= datetime.strptime(content["token_expiration_date"], "%Y-%m-%d %H:%M:%S")
+						if str(content['client_id']) == str(aluno_id) and expiration >= datetime.now():
+							response.append_header('locals', content)
+							return True
+					else:
 						response.append_header('locals', content)
 						return True
 				elif str(content['client_id']) == str(usuario_id) or content["level"] == "admin":
