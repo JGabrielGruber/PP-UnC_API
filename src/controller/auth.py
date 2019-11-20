@@ -15,10 +15,6 @@ from	model.login			import Login
 from	controller.usuario	import getUsuarioByEmail
 from	library				import errorHandler
 
-# TODO: Implementar criação de token para aluno com base na realização que ele irá fazer, e também, com base na data que ele poderá usar este token para acessar esta prova
-#		O id da realização dele e da prova não devem estr presente na URL
-#		Se for o caso, implementar junto no token, então, passar para as funções
-
 def setAuth(response, data, level="basic"):
 	"""Create a new login, with the client_id and the encrypted client_secret"""
 	try:
@@ -136,7 +132,7 @@ def sendReset(response, title, sender, receiver):
 	return ""
 
 def sendToken(response, title, sender, receiver, data):
-	expiration	= format(datetime.now() + timedelta(minutes=receiver['minutes']), "%Y-%m-%d %H:%M:%S")
+	expiration	= format(receiver['limit'], "%Y-%m-%d %H:%M:%S")
 	token = jwt.encode({
 			"client_id": receiver['client_id'],
 			"token_expiration_date": expiration,

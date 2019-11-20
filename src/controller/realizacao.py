@@ -53,7 +53,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 				"name": aluno['nome'],
 				"client_id": str(aluno['_id']),
 				"email": aluno['email'],
-				"minutes": prova['duracao'],
+				"limit": data['limite'],
 				"level": "aluno"
 			}, [
 				usuario_id,
