@@ -19,11 +19,15 @@ def getProvas(response, usuario_id, materia_id, turma_id):
 		return errorHandler.handleError(response, e)
 
 def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
+	locals	= eval(response.get_header("locals"))
 	try:
 		prova	= Usuario.objects.get(id=usuario_id).materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		data	= []
 		if prova:
-			data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
+			if locals["level"] == "aluno":
+				data	= alunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
+			else:
+				data	= dataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		return data
 	except Exception as e:
 		return errorHandler.handleError(response, e)
@@ -110,6 +114,13 @@ def smallDataProva(data):
 		item.pop('corretas', None)
 		item.pop('esperado', None)
 		item.pop('peso', None)
+	return data
+
+def alunoDataProva(data):
+	item.pop("realizacoes", None)
+	for item in data["questoes"]:
+		item.pop('corretas', None)
+		item.pop('esperado', None)
 	return data
 
 def dataProva(data):
