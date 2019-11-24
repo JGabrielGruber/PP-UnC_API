@@ -11,4 +11,4 @@ EXPOSE 8000
 
 WORKDIR /usr/src/app/src
 
-CMD [ "gunicorn", "-b", "0.0.0.0:8000", "app:__hug_wsgi__" ]
+CMD [ "gunicorn", "-b", "0.0.0.0:8000", "--log-level LEVEL", "app:__hug_wsgi__" ]
