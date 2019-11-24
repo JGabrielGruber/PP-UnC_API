@@ -13,7 +13,12 @@ def getConf():
 		with open('./.cache/conf.json', mode='w') as file:
 			file.write(json.dumps( { "confs" : {
 				"db_auth_host": "",
-				"db_data_host": ""
+				"db_data_host": "",
+				"web_url": "",
+				"smtp_url": "",
+				"smtp_port": "",
+				"smtp_user": "",
+				"smtp_password": "",
 			} } ))
 			getConf()
 

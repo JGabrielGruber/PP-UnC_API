@@ -3,6 +3,8 @@ import	jwt
 import	os
 import	smtplib
 
+import	conf
+
 from	email.message			import EmailMessage
 from	email.headerregistry	import Address
 from	email.utils				import make_msgid
@@ -140,7 +142,7 @@ def sendToken(response, title, sender, receiver, data):
 			"level": receiver['level']
 		}, getSecret(), algorithm="HS256"
 	).decode('utf8')
-	link = "https://127.0.0.1/realizarProva?token=" + token
+	link = conf.getConf()['web_url'] + "realizacao?token=" + token
 	msg = EmailMessage()
 	msg['Subject'] = title
 	msg['From'] = Address(sender['name'], sender['client_id'], sender['email'])
@@ -174,8 +176,9 @@ def sendToken(response, title, sender, receiver, data):
 	msg.add_alternative(content, subtype='html')
 
 	try:
-		with smtplib.SMTP('localhost') as s:
-			s.send_message(msg)
+		with smtplib.SMTP(conf.getConf()['smtp_url'], conf.getConf()['smtp_port']) as server:
+			server.login(conf.getConf()['smtp_user'], conf.getConf()['smtp_password'])
+			server.send_message(msg)
 			return ""
 	except Exception as e:
 		return errorHandler.handleError(response, e)
