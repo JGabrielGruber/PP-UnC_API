@@ -46,7 +46,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 			prova.realizacoes.append(realizacao)
 			usuario.save()
 			auth.sendToken(response, "Link de acesso da prova", {
-				"name": usuario['nome'],
+				"name": PP-UnC - usuario['nome'],
 				"client_id": str(usuario['id']),
 				"email": usuario['email']
 			}, {

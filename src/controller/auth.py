@@ -177,8 +177,10 @@ def sendToken(response, title, sender, receiver, data):
 
 	try:
 		with smtplib.SMTP(conf.getConf()['smtp_url'], conf.getConf()['smtp_port']) as server:
+			server.starttls()
 			server.login(conf.getConf()['smtp_user'], conf.getConf()['smtp_password'])
 			server.send_message(msg)
+			server.quit()
 			return ""
 	except Exception as e:
 		return errorHandler.handleError(response, e)
