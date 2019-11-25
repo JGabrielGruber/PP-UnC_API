@@ -35,6 +35,7 @@ def getRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, real
 def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 	try:
 		usuario		= Usuario.objects.get(id=usuario_id)
+		materia		= usuario.materias.get(_id=materia_id)
 		prova		= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
 		dataAlunos	= data["alunos"]
 		realizacoes	= []
@@ -63,7 +64,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 				turma_id,
 				prova_id,
 				str(realizacao["_id"])
-			], prova.titulo)
+			], prova.titulo + " da matéria " + materia.titulo)
 			realizacoes.append(json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		response.status = HTTP_201
 		return realizacoes
