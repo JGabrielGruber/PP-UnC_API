@@ -47,12 +47,14 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 			usuario.save()
 			auth.sendToken(response, "Link de acesso da prova", {
 				"name": "PP-UnC - " + usuario['nome'],
-				"client_id": str(usuario['id']),
+				"client_id": str(usuario['email']).split('@')[0],
+				"domain": usuario['email'].split('@')[1],
 				"email": usuario['email']
 			}, {
 				"name": aluno['nome'],
-				"client_id": str(aluno['_id']),
-				"email": aluno['email'],
+				"client_id": str(aluno['email']).split('@')[0],
+				"domain": str(aluno['email']).split('@')[1],
+				"email": str(aluno['email']),
 				"limit": data['limite'],
 				"level": "aluno"
 			}, [

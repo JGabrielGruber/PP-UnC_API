@@ -145,8 +145,8 @@ def sendToken(response, title, sender, receiver, data):
 	link = conf.getConf()['web_url'] + "realizacao?token=" + token
 	msg = EmailMessage()
 	msg['Subject'] = title
-	msg['From'] = Address(sender['name'], sender['client_id'], sender['email'])
-	msg['To'] = (Address(receiver['name'], str(receiver['client_id']), receiver['email']))
+	msg['From'] = Address(sender['name'], addr_spec=sender['email'])
+	msg['To'] = Address(receiver['name'], addr_spec=receiver['email'])
 	content = """\
 	Olá,
 
