@@ -133,7 +133,7 @@ def sendReset(response, title, sender, receiver):
 
 	return ""
 
-def sendToken(response, title, sender, receiver, data):
+def sendToken(response, title, sender, receiver, data, message):
 	expiration	= format(receiver['limit'], "%Y-%m-%d %H:%M:%S")
 	token = jwt.encode({
 			"client_id": receiver['client_id'],
@@ -150,15 +150,14 @@ def sendToken(response, title, sender, receiver, data):
 	content = """\
 	Olá,
 
-	Há uma prova para você realizar.
+	Há uma prova para você realizar, [3]{0}.
 	Use este link[1] para poder acessar a mesma. Ele irá expirar em [2]{0}!
 
 	[1]{0}
 
 	Este é um email automático, não o responda!
 	"""
-	print(link)
-	msg.set_content(content.format(link, expiration))
+	msg.set_content(content.format(link, expiration, message))
 	asparagus_cid = make_msgid()
 
 	content = """\
@@ -166,12 +165,12 @@ def sendToken(response, title, sender, receiver, data):
 	  <head></head>
 	  <body>
 		<p>Olá,</p>
-		<p>Há uma prova para você realizar.</br>
+		<p>Há uma prova para você realizar, {2}.</br>
 		Use este <a href="{0}">link</a> para poder acessar a mesma. Ele irá expirar em {1}!</p>
 		<p>Este é um email automático, não o responda!</p>
 	  </body>
 	</html>
-	""".format(link, expiration, asparagus_cid=asparagus_cid[1:-1])
+	""".format(link, expiration, message, asparagus_cid=asparagus_cid[1:-1])
 
 	msg.add_alternative(content, subtype='html')
 

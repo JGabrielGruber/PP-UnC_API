@@ -63,7 +63,7 @@ def newRealizacao(response, usuario_id, materia_id, turma_id, prova_id, data):
 				turma_id,
 				prova_id,
 				str(realizacao["_id"])
-			])
+			], prova.titulo)
 			realizacoes.append(json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 		response.status = HTTP_201
 		return realizacoes
