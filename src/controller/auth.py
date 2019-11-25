@@ -194,7 +194,8 @@ def getData(response):
 	if data:
 		return {
 			"client_id": locals["client_id"],
-			"url": "usuarios/" + data[0] + "/materias/" + data[1] + "/turmas/" + data[2] + "/provas/" + data[3] + "/realizacoes/" + data[4]
+			"url_prova": "usuarios/" + data[0] + "/materias/" + data[1] + "/turmas/" + data[2] + "/provas/" + data[3],
+			"url_realizacao": "usuarios/" + data[0] + "/materias/" + data[1] + "/turmas/" + data[2] + "/provas/" + data[3] + "/realizacoes/" + data[4]
 		}
 	else:
 		return {
