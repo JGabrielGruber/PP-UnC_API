@@ -76,13 +76,14 @@ def startRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realiz
 		usuario		= Usuario.objects.get(id=usuario_id)
 		realizacao	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
 		if not realizacao.iniciada:
-			questoes	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).questoes.get()
+			questoes	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).questoes
 			realizacao.timeupdate	= datetime.now()
 			realizacao.timestarted	= datetime.now()
-			realizacao.iniciada		= true
+			realizacao.iniciada		= True
 			for questao in questoes:
 				resposta			= Resposta()
 				resposta.questao	= str(questao._id)
+				realizacao.respostas.append(resposta)
 			usuario.save()
 		return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 	except Exception as e:
@@ -101,10 +102,10 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("timestarted", None)
 			data.pop("limite", None)
 			data.pop("iniciada", None)
+		if data["respostas"]:
 			for resposta in data["respostas"]:
 				resposta.pop("correta", None)
 				resposta.pop("meioCorreta", None)
-		if data["respostas"]:
 			for key, value in enumerate(data["respostas"]):
 				if not "_id" in value and not realizacao.respostas.filter(questao=value["questao"]):
 					resposta	= Resposta(**value)
