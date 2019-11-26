@@ -14,7 +14,7 @@ schema_resposta	= {
 		"escolhas": {
 			"type": "array",
 			"items": {
-				"type": "number"
+				"type": "string"
 			}
 		},
 		"resposta": {
@@ -48,7 +48,7 @@ class RespostaType(hug.types.Type):
 class Resposta(EmbeddedDocument):
 	_id			= ObjectIdField(required=True, default=lambda: ObjectId())
 	questao		= ObjectIdField(required=True)
-	escolhas	= ListField(IntField())
+	escolhas	= ListField(StringField())
 	resposta	= StringField()
 	correta		= BooleanField()
 	meioCorreta	= BooleanField()
