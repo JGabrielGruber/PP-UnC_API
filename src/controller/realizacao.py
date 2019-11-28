@@ -1,6 +1,6 @@
 import	json
 from	falcon		import HTTP_201, HTTP_400, HTTP_403, HTTP_502
-from	datetime	import datetime
+from	datetime	import datetime, timedelta
 
 from	model.usuario		import Usuario
 from	model.realizacao	import RealizacaoType, Realizacao
@@ -93,7 +93,8 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 	locals	= eval(response.get_header("locals"))
 	try:
 		usuario		= Usuario.objects.get(id=usuario_id)
-		realizacao	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
+		prova		= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
+		realizacao	= prova.realizacoes.get(_id=realizacao_id)
 		data.pop("timestamp", None)
 		data.pop("aluno", None)
 		data["timeupdate"]	= datetime.now()
@@ -102,6 +103,8 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("timestarted", None)
 			data.pop("limite", None)
 			data.pop("iniciada", None)
+			if realizacao["timestarted"] + timedelta(minutes=prova["duracao"]) < datetime.now():
+				return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		if data["respostas"]:
 			for resposta in data["respostas"]:
 				resposta.pop("correta", None)
