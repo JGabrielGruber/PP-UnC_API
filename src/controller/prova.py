@@ -26,7 +26,7 @@ def getProvaById(response, usuario_id, materia_id, turma_id, prova_id):
 		if prova:
 			if locals["level"] == "aluno":
 				realizacao	= prova.realizacoes.get(_id=locals["data"][4])
-				if realizacao.iniciada:
+				if realizacao.iniciada or not realizacao.finalizada:
 					data	= alunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))
 				else:
 					data	= smallAlunoDataProva(json.loads(json.dumps(prova.to_mongo().to_dict(), indent=4, sort_keys=True, default=str)))

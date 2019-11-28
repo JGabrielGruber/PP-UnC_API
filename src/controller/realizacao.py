@@ -105,7 +105,9 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("limite", None)
 			data.pop("iniciada", None)
 			if realizacao["timestarted"] + timedelta(minutes=prova["duracao"]) < datetime.now() or realizacao.finalizada:
-				return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
+				res = json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
+				res.pop("respostas", None)
+				return res
 		if data["respostas"]:
 			for resposta in data["respostas"]:
 				resposta.pop("correta", None)
