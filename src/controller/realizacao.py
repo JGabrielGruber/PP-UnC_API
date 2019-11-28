@@ -80,6 +80,7 @@ def startRealizacao(response, usuario_id, materia_id, turma_id, prova_id, realiz
 			realizacao.timeupdate	= datetime.now()
 			realizacao.timestarted	= datetime.now()
 			realizacao.iniciada		= True
+			realizacao.finalizada	= False
 			for questao in questoes:
 				resposta			= Resposta()
 				resposta.questao	= str(questao._id)
@@ -94,7 +95,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 	try:
 		usuario		= Usuario.objects.get(id=usuario_id)
 		prova		= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id)
-		realizacao	= prova.realizacoes.get(_id=realizacao_id)
+		realizacao	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
 		data.pop("timestamp", None)
 		data.pop("aluno", None)
 		data["timeupdate"]	= datetime.now()
@@ -103,7 +104,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("timestarted", None)
 			data.pop("limite", None)
 			data.pop("iniciada", None)
-			if realizacao["timestarted"] + timedelta(minutes=prova["duracao"]) < datetime.now():
+			if realizacao["timestarted"] + timedelta(minutes=prova["duracao"]) < datetime.now() or realizacao.finalizada:
 				return json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 		if data["respostas"]:
 			for resposta in data["respostas"]:
@@ -120,6 +121,7 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("respostas")
 			usuario.save()
 			usuario.reload()
+			realizacao	= usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.get(_id=realizacao_id)
 		data.pop("_id", None)
 		for key, value in data.items():
 			realizacao[key]	= value
