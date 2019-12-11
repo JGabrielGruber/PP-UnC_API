@@ -123,11 +123,11 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 					for k, v in value.items():
 						resposta[k]	= v
 					if resposta["correta"] and not resposta["meioCorreta"]:
-						total = total ? total : 0 + questao["peso"] > 0 ? questao["peso"] : 1
+						total = total if total else 0 + questao["peso"] > 0 if questao["peso"] else 1
 					elif resposta["meioCorreta"]:
-						total = total ? total : 0 + (questao["peso"] > 0 ? questao["peso"] : 1 / 2)
+						total = total if total else 0 + (questao["peso"] > 0 if questao["peso"] else 1 / 2)
 					elif resposta["correta"] == false:
-						total = total ? total : 0
+						total = total if total else 0
 			if total:
 				realizacao["nota"] = total
 			data.pop("respostas")
