@@ -112,14 +112,24 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 				res.pop("respostas", None)
 				return res
 		if data["respostas"]:
+			total = None
 			for key, value in enumerate(data["respostas"]):
 				if not "_id" in value and not realizacao.respostas.filter(questao=value["questao"]):
 					resposta	= Resposta(**value)
 					realizacao.respostas.append(resposta)
 				else:
 					resposta	= realizacao.respostas.filter(questao=value["questao"])[0]
+					questao		= prova.questoes.get(_id=value["questao"])
 					for k, v in value.items():
 						resposta[k]	= v
+					if resposta["correta"] and not resposta["meioCorreta"]:
+						total = total ? total : 0 + questao["peso"] > 0 ? questao["peso"] : 1
+					elif resposta["meioCorreta"]:
+						total = total ? total : 0 + (questao["peso"] > 0 ? questao["peso"] : 1 / 2)
+					elif resposta["correta"] == false:
+						total = total ? total : 0
+			if total:
+				realizacao["nota"] = total
 			data.pop("respostas")
 			usuario.save()
 			usuario.reload()
