@@ -104,14 +104,14 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 			data.pop("timestarted", None)
 			data.pop("limite", None)
 			data.pop("iniciada", None)
+			for resposta in data["respostas"]:
+				resposta.pop("correta", None)
+				resposta.pop("meioCorreta", None)
 			if realizacao["timestarted"] + timedelta(minutes=prova["duracao"]) < datetime.now() or realizacao.finalizada:
 				res = json.loads(json.dumps(realizacao.to_mongo().to_dict(), indent=4, sort_keys=True, default=str))
 				res.pop("respostas", None)
 				return res
 		if data["respostas"]:
-			for resposta in data["respostas"]:
-				resposta.pop("correta", None)
-				resposta.pop("meioCorreta", None)
 			for key, value in enumerate(data["respostas"]):
 				if not "_id" in value and not realizacao.respostas.filter(questao=value["questao"]):
 					resposta	= Resposta(**value)
@@ -132,10 +132,10 @@ def updateRealizacao(response, usuario_id, materia_id, turma_id, prova_id, reali
 	except Exception as e:
 		return errorHandler.handleError(response, e)
 
-def deleteRealizacaoById(response, usuario_id, materia_id, turma_id, realizacao_id, prova_id):
+def deleteRealizacaoById(response, usuario_id, materia_id, turma_id, prova_id, realizacao_id):
 	try:
 		usuario	= Usuario.objects.get(id=usuario_id)
-		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.filter(_id=prova_id).delete()
+		usuario.materias.get(_id=materia_id).turmas.get(_id=turma_id).provas.get(_id=prova_id).realizacoes.filter(_id=realizacao_id).delete()
 		usuario.save()
 		return
 	except Exception as e:
